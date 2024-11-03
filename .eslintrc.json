@@ -1,0 +1,26 @@
+{
+  "extends": [
+    "next/core-web-vitals",
+    "plugin:@typescript-eslint/recommended",
+    "plugin:testing-library/react",
+    "plugin:jest-dom/recommended"
+  ],
+  "rules": {
+    "jsdoc/no-defaults": "off",
+    "@next/next/no-img-element": "off",
+    "import/no-anonymous-default-export": "off",
+
+    "react-hooks/exhaustive-deps": "warn",
+    "react/display-name": "warn",
+    "react-hooks/rules-of-hooks": "warn",
+    "@typescript-eslint/no-explicit-any": "warn",
+    "@typescript-eslint/no-unused-vars": "warn",
+    "complexity": ["warn"],
+
+    "prefer-arrow-callback": "error",
+    "react/jsx-no-constructed-context-values": "error",
+    "react/jsx-key": "error",
+
+    "max-depth": ["error", 5]
+  }
+}
