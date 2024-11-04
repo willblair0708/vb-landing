@@ -150,24 +150,18 @@ export default function InsightsSection({ id }: InsightsSectionProps) {
       ref={sectionRef}
       id={id}
       className='relative flex min-h-screen flex-col-reverse items-center overflow-hidden bg-black lg:flex-row'
-      initial={{ opacity: 0 }}
-      animate={{ opacity: 1 }}
-      transition={{ duration: 1 }}
     >
       <motion.div
         className='relative z-0 h-[28rem] w-full sm:h-[36rem] lg:h-screen lg:w-3/5'
         style={{ scale, opacity }}
       >
-        {/* Cell simulation overlay */}
-        <div className='bg-cell-pattern absolute inset-0 opacity-10' />
+        {/* Updated visualization overlays */}
+        <div className='bg-gradient-radial absolute inset-0 from-white/5 via-transparent to-transparent opacity-30' />
+        <div className='absolute inset-0 bg-[url("/assets/patterns/dna.svg")] opacity-5' />
 
-        {/* Gradient overlays */}
-        <div className='absolute inset-0 bg-gradient-to-t from-black via-black/50 to-transparent' />
-        <div className='absolute inset-0 bg-gradient-to-r from-black via-transparent to-black lg:hidden' />
-
-        {/* Video container */}
+        {/* Video container with monochrome overlay */}
         <div className='relative h-full'>
-          <div className='absolute inset-0 bg-white/5 mix-blend-overlay' />
+          <div className='absolute inset-0 bg-gradient-to-r from-white/5 to-white/5 mix-blend-overlay' />
           <Suspense
             fallback={
               <div className='h-full w-full animate-pulse bg-neutral-900' />
@@ -177,9 +171,10 @@ export default function InsightsSection({ id }: InsightsSectionProps) {
           </Suspense>
         </div>
 
-        {/* Cell simulation particles */}
+        {/* Simplified particle effects */}
         <div className='absolute inset-0 overflow-hidden'>
-          <div className='cell-particles' />
+          <div className='cell-particles-mono animate-float' />
+          <div className='dna-helix-mono animate-spin-slow' />
         </div>
       </motion.div>
 
@@ -191,55 +186,57 @@ export default function InsightsSection({ id }: InsightsSectionProps) {
           className='mx-auto max-w-[500px]'
         >
           <motion.div variants={itemVariants} className='text-left'>
-            {/* Status badge */}
-            <div className='mb-8 inline-flex items-center rounded-full border border-white/10 bg-white/5 px-4 py-2 backdrop-blur-sm'>
-              <div className='mr-2 h-2 w-2 animate-pulse rounded-full bg-white'></div>
+            {/* Updated status badge */}
+            <div className='mb-8 inline-flex items-center gap-2 rounded-full border border-white/10 bg-white/5 px-4 py-2 backdrop-blur-sm'>
+              <div className='h-2 w-2 animate-pulse rounded-full bg-white'></div>
               <span className='text-sm font-medium text-white'>
-                Virtual Cell Model
+                AI-Powered Drug Discovery
               </span>
             </div>
 
-            {/* Heading */}
+            {/* Rest of the content remains structurally the same, just updated colors */}
             <h2 className='mb-6 font-rg text-[2.75rem] leading-tight tracking-tight text-white'>
-              Predict cellular behavior with unprecedented accuracy
+              Revolutionizing Drug Development with Virtual Cell Models
             </h2>
 
-            {/* Description */}
             <p className='mb-8 text-lg leading-relaxed text-neutral-300'>
-              Our virtual cell models leverage genomic sequences and comparative
-              genomics to predict gene expression patterns and cellular
-              responses, enabling rapid in silico experimentation.
+              Our cross-species virtual cell models leverage genomic sequences
+              and comparative genomics to predict gene expression patterns
+              directly from DNA, enabling rapid in silico drug testing across
+              diverse populations.
             </p>
 
-            {/* Metrics */}
-            <div className='mb-12 grid grid-cols-2 gap-6'>
-              <div className='group rounded-xl border border-white/10 bg-white/5 p-4 transition-all hover:bg-white/10'>
-                <div className='flex items-baseline gap-1'>
-                  <div className='text-3xl font-semibold text-white'>92</div>
-                  <div className='text-lg text-white/80'>%</div>
+            {/* Updated metrics with monochrome design */}
+            <div className='mb-12 grid grid-cols-3 gap-4'>
+              {[
+                { value: '90', unit: '%', label: 'Failure Rate Reduction' },
+                { value: '2B', unit: '$', label: 'Cost Savings per Drug' },
+                { value: '1000', unit: 'x', label: 'Faster Development' },
+              ].map((metric, i) => (
+                <div
+                  key={i}
+                  className='group rounded-xl border border-white/10 bg-white/5 p-4 transition-all hover:bg-white/10'
+                >
+                  <div className='flex items-baseline gap-1'>
+                    <div className='text-3xl font-semibold text-white'>
+                      {metric.value}
+                    </div>
+                    <div className='text-lg text-white/80'>{metric.unit}</div>
+                  </div>
+                  <div className='mt-1 text-sm text-neutral-400 group-hover:text-neutral-300'>
+                    {metric.label}
+                  </div>
                 </div>
-                <div className='mt-1 text-sm text-neutral-400 group-hover:text-neutral-300'>
-                  Prediction Accuracy
-                </div>
-              </div>
-              <div className='group rounded-xl border border-white/10 bg-white/5 p-4 transition-all hover:bg-white/10'>
-                <div className='flex items-baseline gap-1'>
-                  <div className='text-3xl font-semibold text-white'>1000</div>
-                  <div className='text-lg text-white/80'>x</div>
-                </div>
-                <div className='mt-1 text-sm text-neutral-400 group-hover:text-neutral-300'>
-                  Faster Analysis
-                </div>
-              </div>
+              ))}
             </div>
 
-            {/* CTA */}
+            {/* Updated CTA */}
             <motion.div variants={itemVariants}>
               <Link
                 className='group inline-flex items-center gap-x-3 rounded-lg border border-white/20 bg-white/5 px-6 py-3 text-sm font-medium text-white transition-all hover:bg-white/10'
                 href='/contact'
               >
-                <span>Explore Virtual Cell Models</span>
+                <span>Explore Our Platform</span>
                 <ArrowIcon
                   className='rotate-[-90deg] transition-transform group-hover:translate-x-1'
                   color='#FFFFFF'

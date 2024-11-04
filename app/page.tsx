@@ -35,13 +35,13 @@ export default function Home() {
     },
   };
   return (
-    <div>
+    <div className='bg-black'>
       {isMounted && (
         <>
           <AnimatePresence mode='wait'>
             <motion.div
               key='home-page'
-              className='min-h-screen overflow-hidden font-sans'
+              className='min-h-screen overflow-hidden font-sans text-white'
             >
               <motion.main
                 ref={containerRef}
@@ -64,11 +64,11 @@ export default function Home() {
                         id={`section-${index}`}
                         bgColor={
                           index === 1
-                            ? '#C6C4C2'
+                            ? '#171717'
                             : index === 3
-                              ? '#FFFFFF'
+                              ? '#000000'
                               : index === 4
-                                ? '#18181B'
+                                ? '#0A0A0A'
                                 : ''
                         }
                         isMobile={isMobile}
@@ -79,18 +79,9 @@ export default function Home() {
                 <motion.div className='w-full'>
                   <HumanitySection
                     id='section-4'
-                    bgColor='#fff'
+                    bgColor='#000000'
                     isMobile={isMobile}
                   />
-                </motion.div>
-                <motion.div
-                  variants={sectionVariants}
-                  initial='hidden'
-                  whileInView='visible'
-                  viewport={{ once: true, amount: isMobile ? 0.1 : 0.3 }}
-                  className='w-full'
-                >
-                  {/* <FutureSection id='section-5' bgColor='#18181B' /> */}
                 </motion.div>
               </motion.main>
             </motion.div>

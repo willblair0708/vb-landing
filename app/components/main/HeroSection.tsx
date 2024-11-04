@@ -304,7 +304,8 @@ export default function HeroSection({ id, isMobile }: HeroSectionProps) {
             className='h-full w-full object-cover opacity-60'
           />
         )}
-        <div className='absolute inset-0 bg-gradient-to-b from-black/80 via-black/60 to-black/40'></div>
+        <div className='absolute inset-0 bg-gradient-to-b from-black/90 via-black/70 to-black/50' />
+        <div className='absolute inset-0 bg-[url("/assets/patterns/dna.svg")] opacity-5' />
       </motion.div>
 
       <div className='relative z-20 flex h-full flex-col'>
@@ -316,27 +317,42 @@ export default function HeroSection({ id, isMobile }: HeroSectionProps) {
           style={{ opacity, scale }}
         >
           <div className='w-full max-w-4xl'>
+            <motion.div
+              variants={fadeInVariants}
+              initial='hidden'
+              animate={isInView ? 'visible' : 'hidden'}
+              className='mb-8 inline-flex items-center gap-2 rounded-full border border-white/10 bg-white/5 px-4 py-2 backdrop-blur-sm'
+            >
+              <div className='h-2 w-2 animate-pulse rounded-full bg-white'></div>
+              <span className='text-sm font-medium text-white'>
+                Next-Gen Drug Discovery Platform
+              </span>
+            </motion.div>
+
             <motion.h1
               variants={fadeInVariants}
               initial='hidden'
               animate={isInView ? 'visible' : 'hidden'}
               className='mb-6 font-book text-[42px] leading-tight tracking-tight text-white sm:text-[56px] lg:text-[64px]'
             >
-              <span className='text-blue-400'>AI-Powered</span> Virtual Cell
-              Models
+              <span className='text-white'>AI-Powered</span> Virtual Cell Models
               <br />
-              Revolutionizing Drug Discovery
+              <span className='bg-gradient-to-r from-white to-white/80 bg-clip-text text-transparent'>
+                Revolutionizing Drug Discovery
+              </span>
             </motion.h1>
+
             <motion.p
               variants={slideInVariants}
               initial='hidden'
               animate={isInView ? 'visible' : 'hidden'}
-              className='mb-8 max-w-2xl text-lg text-gray-300 sm:text-xl'
+              className='mb-8 max-w-2xl text-lg text-neutral-300 sm:text-xl'
             >
               Leveraging genomic sequences and comparative genomics to predict
               gene expression and cell types directly from DNA, bypassing
               traditional data bottlenecks.
             </motion.p>
+
             <motion.div
               variants={fadeInVariants}
               initial='hidden'
@@ -345,14 +361,25 @@ export default function HeroSection({ id, isMobile }: HeroSectionProps) {
             >
               <Link
                 href='/platform'
-                className='rounded-md bg-blue-500 px-6 py-3 text-sm font-semibold text-white transition-colors hover:bg-blue-600'
+                className='group relative overflow-hidden rounded-md bg-white px-6 py-3 text-sm font-semibold text-black transition-transform hover:scale-[1.02]'
               >
+                <div className='absolute inset-0 bg-gradient-to-r from-white/0 via-white/50 to-white/0 transition-transform group-hover:translate-x-full' />
                 Explore Our Platform
               </Link>
               <Link
-                href='/contact'
-                className='rounded-md border border-white/30 px-6 py-3 text-sm font-semibold text-white transition-colors hover:bg-white/10'
+                href='/pdfs/whitepaper.pdf'
+                className='group relative overflow-hidden rounded-md border border-white/20 bg-white/5 px-6 py-3 text-sm font-semibold text-white backdrop-blur-sm transition-colors hover:bg-white/10'
+                target='_blank'
+                rel='noopener noreferrer'
               >
+                <div className='absolute inset-0 bg-gradient-to-r from-white/0 via-white/10 to-white/0 transition-transform group-hover:translate-x-full' />
+                Read Whitepaper
+              </Link>
+              <Link
+                href='/contact'
+                className='group relative overflow-hidden rounded-md border border-white/20 bg-white/5 px-6 py-3 text-sm font-semibold text-white backdrop-blur-sm transition-colors hover:bg-white/10'
+              >
+                <div className='absolute inset-0 bg-gradient-to-r from-white/0 via-white/10 to-white/0 transition-transform group-hover:translate-x-full' />
                 Contact Us
               </Link>
             </motion.div>
@@ -365,10 +392,10 @@ export default function HeroSection({ id, isMobile }: HeroSectionProps) {
           animate={isInView ? 'visible' : 'hidden'}
           className={`absolute ${
             isMobile ? 'bottom-[30px]' : 'bottom-[60px]'
-          } right-[30px] flex w-[300px] flex-col items-start space-y-4 border-t border-white/30 sm:bottom-20 sm:right-24`}
+          } right-[30px] flex w-[300px] flex-col items-start space-y-4 border-t border-white/20 sm:bottom-20 sm:right-24`}
         >
           <div className='flex flex-col items-start py-3'>
-            <p className='mb-4 font-book text-sm uppercase tracking-wider text-blue-400'>
+            <p className='mb-4 font-book text-sm uppercase tracking-wider text-white/60'>
               Our Impact
             </p>
             <p className='font-book text-lg leading-snug tracking-tight text-white'>
