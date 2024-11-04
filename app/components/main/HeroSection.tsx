@@ -378,7 +378,7 @@ export default function HeroSection({ id, isMobile }: HeroSectionProps) {
                 Explore Our Platform
               </Link>
               <Link
-                href='/VirtualBiologyWhitepaper.pdf'
+                href='/VirtualBiology Whitepaper.pdf'
                 className='group relative overflow-hidden rounded-md border border-white/10 bg-white/[0.02] px-6 py-3 text-sm font-semibold text-white backdrop-blur-sm transition-all duration-300 hover:border-white/20 hover:bg-white/[0.04] hover:shadow-lg hover:shadow-white/5'
                 target='_blank'
                 rel='noopener noreferrer'
