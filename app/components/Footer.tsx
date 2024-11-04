@@ -114,7 +114,7 @@ const FooterSection = ({
   links: { name: string; href: string }[];
 }) => (
   <motion.div variants={itemVariants}>
-    <h3 className='mb-0.5 font-book font-oracle text-xs tracking-[8%] text-white'>
+    <h3 className='font-oracle mb-0.5 font-book text-xs tracking-[8%] text-white'>
       {title}
     </h3>
     <ul className='space-y-0.5'>
@@ -122,7 +122,7 @@ const FooterSection = ({
         <li key={link.name}>
           <Link
             href={link.href}
-            className='font-book font-oracle text-xs tracking-[8%] text-white opacity-50 transition-colors duration-200 hover:text-[#8B8B8B]'
+            className='font-oracle font-book text-xs tracking-[8%] text-white opacity-50 transition-colors duration-200 hover:text-[#8B8B8B]'
           >
             {link.name}
           </Link>
@@ -180,7 +180,7 @@ const Footer: React.FC = () => {
     <motion.footer
       initial='visible'
       variants={containerVariants}
-      className='w-full bg-[#000000] px-4 py-6 font-book font-oracle text-white sm:px-8 sm:py-8'
+      className='font-oracle w-full bg-[#000000] px-4 py-6 font-book text-white sm:px-8 sm:py-8'
     >
       <div className='max-w-9xl mx-auto'>
         <div className='mb-6 flex flex-col sm:mb-8 lg:grid lg:grid-cols-[3fr_2fr] lg:items-start'>
@@ -213,7 +213,7 @@ const Footer: React.FC = () => {
               {/* <button className='font-oracle text-xs tracking-[0.08em] text-[#8B8B8B] transition-colors duration-200 hover:text-white'>
                 COOKIE SETTINGS
               </button> */}
-              <p className='font-book font-oracle text-xs tracking-[0.08em] text-[#ffffff]'>
+              <p className='font-oracle font-book text-xs tracking-[0.08em] text-[#ffffff]'>
                 &copy; 2024 AARU
               </p>
             </div>
@@ -221,7 +221,7 @@ const Footer: React.FC = () => {
 
           <div className='flex flex-col space-y-4 pr-4 sm:flex-row sm:items-start sm:justify-between sm:space-x-8 sm:space-y-0 sm:pr-8'>
             <div className='flex flex-col space-y-2'>
-              <h3 className='font-book font-oracle text-xs tracking-[0.08em] text-[#ffffff]'>
+              <h3 className='font-oracle font-book text-xs tracking-[0.08em] text-[#ffffff]'>
                 JOIN OUR MAILING LIST:
               </h3>
               <form
@@ -243,7 +243,7 @@ const Footer: React.FC = () => {
                         placeholder='Email Address'
                         value={email}
                         onChange={(e) => setEmail(e.target.value)}
-                        className='h-[38px] w-full rounded-md bg-[#18181B] px-3 py-2 pr-16 font-book font-oracle text-xs text-white transition-all duration-200 placeholder:font-oracle placeholder:text-xs focus:outline-none focus:ring-2 focus:ring-white'
+                        className='font-oracle placeholder:font-oracle h-[38px] w-full rounded-md bg-[#18181B] px-3 py-2 pr-16 font-book text-xs text-white transition-all duration-200 placeholder:text-xs focus:outline-none focus:ring-2 focus:ring-white'
                       />
                       <AnimatePresence>
                         {email && (
@@ -273,7 +273,7 @@ const Footer: React.FC = () => {
                       initial='hidden'
                       animate='visible'
                       exit='exit'
-                      className='items-left justify-left flex h-[38px] w-full rounded-md bg-[#18181B] px-3 py-2 font-book font-oracle text-xs tracking-[0.08em] text-white'
+                      className='items-left justify-left font-oracle flex h-[38px] w-full rounded-md bg-[#18181B] px-3 py-2 font-book text-xs tracking-[0.08em] text-white'
                     >
                       Thank you for subscribing
                     </motion.div>
@@ -289,7 +289,7 @@ const Footer: React.FC = () => {
                 ))}
               </div>
               {/* Mobile copyright - hidden on desktop */}
-              <p className='mt-8 font-book font-oracle text-xs tracking-[0.08em] text-[#ffffff] sm:hidden'>
+              <p className='font-oracle mt-8 font-book text-xs tracking-[0.08em] text-[#ffffff] sm:hidden'>
                 &copy; 2024 AARU
               </p>
             </div>

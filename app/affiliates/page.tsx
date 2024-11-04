@@ -143,7 +143,7 @@ export default function Affiliates() {
       <Navbar isFixed={false} />
       <motion.div
         key='affiliates-page'
-        className={`${isMobile ? 'min-h-fit' : 'h-screen'} overflow-hidden bg-zinc-900 font-oracle`}
+        className={`${isMobile ? 'min-h-fit' : 'h-screen'} font-oracle overflow-hidden bg-zinc-900`}
       >
         <motion.main
           ref={containerRef}

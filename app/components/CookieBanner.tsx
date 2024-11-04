@@ -125,7 +125,7 @@ export default function CookieBanner() {
                     </svg>
                   </button>
                 </div>
-                <p className='font-book font-oracle text-[15px] leading-[18px] text-white opacity-70'>
+                <p className='font-oracle font-book text-[15px] leading-[18px] text-white opacity-70'>
                   We use our own and third-party cookies to personalize content
                   and to analyze web traffic. Learn about our privacy policy.
                 </p>

@@ -19,57 +19,16 @@ const geistMono = localFont({
   preload: true,
 });
 
-const abcOracle = localFont({
+const hoves = localFont({
   src: [
-    {
-      path: '../public/fonts/ABCOracle-Light.woff2',
-      weight: '300',
-      style: 'normal',
-    },
-    {
-      path: '../public/fonts/ABCOracle-BookItalic.woff2',
-      weight: '350',
-      style: 'normal',
-    },
-    {
-      path: '../public/fonts/ABCOracle-BookItalic.woff2',
-      weight: '350',
-      style: 'italic',
-    },
-    {
-      path: '../public/fonts/ABCOracle-Regular.woff2',
-      weight: '400',
-      style: 'normal',
-    },
-    {
-      path: '../public/fonts/ABCOracle-RegularItalic.woff2',
-      weight: '400',
-      style: 'italic',
-    },
-    {
-      path: '../public/fonts/ABCOracle-Medium.woff2',
-      weight: '500',
-      style: 'normal',
-    },
-    {
-      path: '../public/fonts/ABCOracle-MediumItalic.woff2',
-      weight: '500',
-      style: 'italic',
-    },
-    {
-      path: '../public/fonts/ABCOracle-Bold.woff2',
-      weight: '700',
-      style: 'normal',
-    },
-    {
-      path: '../public/fonts/ABCOracle-BoldItalic.woff2',
-      weight: '700',
-      style: 'italic',
-    },
+    { path: '../public/fonts/TTHoves/Regular.ttf', style: 'normal' },
+    { path: '../public/fonts/TTHoves/Bold.ttf', style: 'normal' },
+    { path: '../public/fonts/TTHoves/Demibold.ttf', style: 'normal' },
+    { path: '../public/fonts/TTHoves/Light.ttf', style: 'normal' },
+    { path: '../public/fonts/TTHoves/Medium.ttf', style: 'normal' },
   ],
-  variable: '--font-abc-oracle',
+  variable: '--font-hoves',
   display: 'swap',
-  preload: true,
 });
 
 const gtPantheon = localFont({
@@ -81,9 +40,9 @@ const gtPantheon = localFont({
 
 export const metadata: Metadata = {
   metadataBase: new URL('https://aaruaaru.com'),
-  title: 'Aaru | Rethinking the Science of Prediction',
+  title: 'Virtual Biology Corporation | AI-Powered Drug Discovery',
   description:
-    'Aaru is revolutionizing prediction through multi-agent systems, offering unparalleled insights into future events and trends.',
+    'Virtual Biology Corporation is revolutionizing drug discovery through AI-powered virtual cell models, genomic language models, and cross-species analysis - reducing costs and accelerating development.',
   viewport: {
     width: 'device-width',
     initialScale: 1,
@@ -93,31 +52,31 @@ export const metadata: Metadata = {
   icons: [{ rel: 'icon', url: '/favicon.ico' }],
   twitter: {
     card: 'summary_large_image',
-    site: '@aaruhq',
-    creator: '@aaruhq',
+    site: '@virtualbio',
+    creator: '@virtualbio',
     images: [
       {
         url: '/assets/og.png',
         width: 1200,
         height: 630,
-        alt: 'Aaru - Rethinking the Science of Prediction',
+        alt: 'Virtual Biology Corporation - AI-Powered Drug Discovery',
       },
     ],
   },
   openGraph: {
     type: 'website',
     locale: 'en_US',
-    url: 'https://aaruaaru.com',
-    siteName: 'Aaru',
-    title: 'Aaru | Rethinking the Science of Prediction',
+    url: 'https://virtualbio.com',
+    siteName: 'Virtual Biology Corporation',
+    title: 'Virtual Biology Corporation | AI-Powered Drug Discovery',
     description:
-      'Aaru is revolutionizing prediction through multi-agent systems, offering unparalleled insights into future events and trends.',
+      'Virtual Biology Corporation is revolutionizing drug discovery through AI-powered virtual cell models, genomic language models, and cross-species analysis - reducing costs and accelerating development.',
     images: [
       {
         url: '/assets/og.png',
         width: 1200,
         height: 630,
-        alt: 'Aaru - Rethinking the Science of Prediction',
+        alt: 'Virtual Biology Corporation - AI-Powered Drug Discovery',
       },
     ],
   },
@@ -129,7 +88,7 @@ export default function RootLayout({
   children: ReactNode;
 }>) {
   return (
-    <html lang='en' className='scroll-smooth bg-[#000000]'>
+    <html lang='en' className='scroll-smooth bg-[#000913]'>
       {/* GA Script with default denied consent */}
       <Script
         strategy='afterInteractive'
@@ -155,7 +114,7 @@ export default function RootLayout({
       />
       <CSPostHogProvider>
         <body
-          className={`${abcOracle.variable} ${geistMono.variable} ${gtPantheon.variable} bg-background-light text-primary antialiased`}
+          className={`${hoves.variable} ${geistMono.variable} ${gtPantheon.variable} bg-gradient-to-b from-[#000913] to-[#001F3F] text-primary antialiased`}
         >
           <div className='flex min-h-screen flex-col'>
             <Toaster />

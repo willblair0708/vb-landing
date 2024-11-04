@@ -172,7 +172,7 @@ const MobileMenu = memo(
                   className='group flex items-center gap-2.5 rounded-full bg-zinc-900 px-1.5 py-0.5 transition-colors duration-200 hover:bg-zinc-800'
                   onClick={toggleMenu}
                 >
-                  <span className='font-book font-oracle text-sm tracking-[1.12px] text-white'>
+                  <span className='font-oracle font-book text-sm tracking-[1.12px] text-white'>
                     CONTACT
                   </span>
                   <motion.svg
@@ -246,7 +246,7 @@ const MobileMenuItem = memo(
         <Link
           href={item.href}
           onClick={toggleMenu}
-          className={`relative mb-[15px] block font-oracle text-[32px] leading-[43.20px] tracking-[-0.36px] text-zinc-900 transition-opacity duration-200 ${
+          className={`font-oracle relative mb-[15px] block text-[32px] leading-[43.20px] tracking-[-0.36px] text-zinc-900 transition-opacity duration-200 ${
             isActive ? 'opacity-100' : 'opacity-60 hover:opacity-80'
           }`}
         >

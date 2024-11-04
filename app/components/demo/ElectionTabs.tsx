@@ -108,12 +108,12 @@ function ElectionTabs({ activeTab, isSticky = false }: ElectionTabsProps) {
         <div className='mt-4 flex w-full items-center justify-between sm:mt-6'>
           <motion.p
             variants={navItemVariants}
-            className='font-book font-oracle text-[12px] leading-[15px] tracking-[-0.02em] text-white opacity-70 sm:text-[15px] sm:leading-[18px]'
+            className='font-oracle font-book text-[12px] leading-[15px] tracking-[-0.02em] text-white opacity-70 sm:text-[15px] sm:leading-[18px]'
           >
             2024 Election Predictions:
           </motion.p>
 
-          <div className='flex space-x-4 font-oracle text-[12px] leading-[15px] tracking-[-0.02em] text-white sm:space-x-8 sm:text-[15px] sm:leading-[18px]'>
+          <div className='font-oracle flex space-x-4 text-[12px] leading-[15px] tracking-[-0.02em] text-white sm:space-x-8 sm:text-[15px] sm:leading-[18px]'>
             {tabs.map((tab) => (
               <TabLink key={tab.id} tab={tab} activeTab={activeTab} />
             ))}

@@ -88,7 +88,7 @@ export default function ProductsPage() {
   };
 
   return (
-    <div className='min-h-screen bg-[#18181B] font-oracle'>
+    <div className='font-oracle min-h-screen bg-[#18181B]'>
       <CountdownBanner metadata={data.metadata} />
       <Navbar isFixed={false} />
 

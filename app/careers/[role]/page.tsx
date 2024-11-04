@@ -47,7 +47,7 @@ const JobDetailsPage = () => {
   };
 
   return (
-    <div className='min-h-screen bg-black font-book font-oracle'>
+    <div className='font-oracle min-h-screen bg-black font-book'>
       <AnimatePresence mode='wait'>
         {isLoading || !job ? (
           <motion.div

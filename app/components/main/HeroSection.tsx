@@ -19,6 +19,7 @@ interface HeroSectionProps {
 export default function HeroSection({ id, isMobile }: HeroSectionProps) {
   const sectionRef = useRef<HTMLElement>(null);
   const videoRef = useRef<HTMLVideoElement>(null);
+  const canvasRef = useRef<HTMLCanvasElement>(null);
   const [isVideoLoaded, setIsVideoLoaded] = useState(false);
   const [isVideoPlaying, setIsVideoPlaying] = useState(false);
   const [isLowBandwidth, setIsLowBandwidth] = useState(false);
@@ -38,6 +39,98 @@ export default function HeroSection({ id, isMobile }: HeroSectionProps) {
   const ySpring = useSpring(y, springConfig);
 
   const [headerSize, setHeaderSize] = useState('text-[32px]');
+
+  // Interactive particle system
+  useEffect(() => {
+    if (!canvasRef.current) return;
+
+    const canvas = canvasRef.current;
+    const ctx = canvas.getContext('2d');
+    if (!ctx) return;
+
+    let particles: Array<{
+      x: number;
+      y: number;
+      vx: number;
+      vy: number;
+      size: number;
+      color: string;
+    }> = [];
+
+    const resizeCanvas = () => {
+      canvas.width = window.innerWidth;
+      canvas.height = window.innerHeight;
+    };
+
+    const createParticles = () => {
+      particles = [];
+      const numParticles = Math.floor((canvas.width * canvas.height) / 15000);
+
+      for (let i = 0; i < numParticles; i++) {
+        particles.push({
+          x: Math.random() * canvas.width,
+          y: Math.random() * canvas.height,
+          vx: (Math.random() - 0.5) * 0.5,
+          vy: (Math.random() - 0.5) * 0.5,
+          size: Math.random() * 2 + 1,
+          color: `rgba(64, 139, 252, ${Math.random() * 0.5 + 0.2})`,
+        });
+      }
+    };
+
+    const animate = () => {
+      if (!ctx) return;
+
+      ctx.fillStyle = 'rgba(0, 0, 0, 0.05)';
+      ctx.fillRect(0, 0, canvas.width, canvas.height);
+
+      particles.forEach((p) => {
+        p.x += p.vx;
+        p.y += p.vy;
+
+        if (p.x < 0) p.x = canvas.width;
+        if (p.x > canvas.width) p.x = 0;
+        if (p.y < 0) p.y = canvas.height;
+        if (p.y > canvas.height) p.y = 0;
+
+        ctx.beginPath();
+        ctx.arc(p.x, p.y, p.size, 0, Math.PI * 2);
+        ctx.fillStyle = p.color;
+        ctx.fill();
+
+        // Draw connections
+        particles.forEach((p2) => {
+          const dx = p.x - p2.x;
+          const dy = p.y - p2.y;
+          const distance = Math.sqrt(dx * dx + dy * dy);
+
+          if (distance < 100) {
+            ctx.beginPath();
+            ctx.strokeStyle = `rgba(64, 139, 252, ${0.2 * (1 - distance / 100)})`;
+            ctx.lineWidth = 0.5;
+            ctx.moveTo(p.x, p.y);
+            ctx.lineTo(p2.x, p2.y);
+            ctx.stroke();
+          }
+        });
+      });
+
+      requestAnimationFrame(animate);
+    };
+
+    resizeCanvas();
+    createParticles();
+    animate();
+
+    window.addEventListener('resize', () => {
+      resizeCanvas();
+      createParticles();
+    });
+
+    return () => {
+      window.removeEventListener('resize', resizeCanvas);
+    };
+  }, []);
 
   useEffect(() => {
     const handleResize = () => {
@@ -75,15 +168,12 @@ export default function HeroSection({ id, isMobile }: HeroSectionProps) {
     const video = videoRef.current;
     if (!video) return;
 
-    // Reset video playback rate for smoother playback
     video.playbackRate = 0.8;
 
-    // Optimize video loading
     const loadVideo = async () => {
       try {
         video.preload = isLowBandwidth ? 'metadata' : 'auto';
 
-        // Load lower quality version for low bandwidth
         if (isLowBandwidth) {
           video
             .querySelector('source[type="video/webm"]')
@@ -132,7 +222,6 @@ export default function HeroSection({ id, isMobile }: HeroSectionProps) {
       }
     };
 
-    // Event listeners
     video.addEventListener('loadeddata', handleLoadedData);
     video.addEventListener('error', handleError);
     document.addEventListener('visibilitychange', handleVisibilityChange);
@@ -184,6 +273,11 @@ export default function HeroSection({ id, isMobile }: HeroSectionProps) {
         animate={{ opacity: 1 }}
         transition={{ duration: 1 }}
       >
+        <canvas
+          ref={canvasRef}
+          className='absolute inset-0 z-0'
+          style={{ mixBlendMode: 'screen' }}
+        />
         {!isLowBandwidth && !videoError ? (
           <video
             ref={videoRef}
@@ -196,6 +290,7 @@ export default function HeroSection({ id, isMobile }: HeroSectionProps) {
             style={{
               willChange: 'transform',
               transform: 'translate3d(0, 0, 0)',
+              opacity: 0.6,
             }}
           >
             <source src='/assets/main/cell_simulation.webm' type='video/webm' />
@@ -206,10 +301,10 @@ export default function HeroSection({ id, isMobile }: HeroSectionProps) {
           <img
             src='/assets/main/virtual.jpg'
             alt='AI-powered cell simulation visualization'
-            className='h-full w-full object-cover'
+            className='h-full w-full object-cover opacity-60'
           />
         )}
-        <div className='absolute inset-0 bg-gradient-to-b from-black/70 to-black/40'></div>
+        <div className='absolute inset-0 bg-gradient-to-b from-black/80 via-black/60 to-black/40'></div>
       </motion.div>
 
       <div className='relative z-20 flex h-full flex-col'>

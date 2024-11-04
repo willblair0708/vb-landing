@@ -131,12 +131,12 @@ function ProductNavbar({ currentProduct }: ProductNavbarProps) {
         <div className='mt-4 flex w-full items-center justify-between sm:mt-6'>
           <motion.p
             variants={navItemVariants}
-            className='font-book font-oracle text-[12px] leading-[15px] tracking-[-0.02em] text-white opacity-70 sm:text-[15px] sm:leading-[18px]'
+            className='font-oracle font-book text-[12px] leading-[15px] tracking-[-0.02em] text-white opacity-70 sm:text-[15px] sm:leading-[18px]'
           >
             Aaru Products:
           </motion.p>
 
-          <div className='flex space-x-4 font-oracle text-[12px] leading-[15px] tracking-[-0.02em] text-white sm:space-x-8 sm:text-[15px] sm:leading-[18px]'>
+          <div className='font-oracle flex space-x-4 text-[12px] leading-[15px] tracking-[-0.02em] text-white sm:space-x-8 sm:text-[15px] sm:leading-[18px]'>
             {products.map((product) => (
               <ProductLink
                 key={product}

@@ -88,7 +88,7 @@ export default function MissionSection({
         </motion.h2>
         <motion.div variants={itemVariants} className='text-center'>
           <p
-            className={`font-book font-oracle font-[200] tracking-[-0.01em] ${
+            className={`font-oracle font-book font-[200] tracking-[-0.01em] ${
               isMobile
                 ? 'px-4 text-[32px] leading-[38.4px]'
                 : 'text-[40px] leading-[48px] sm:text-[48px] sm:leading-[57.6px] md:text-[56px] md:leading-[67.2px] lg:text-[64px] lg:leading-[76.8px]'

@@ -72,7 +72,7 @@ export default function HowAaruSimulatesPopulations() {
   };
 
   return (
-    <div className='flex min-h-screen flex-col font-oracle'>
+    <div className='font-oracle flex min-h-screen flex-col'>
       <Navbar isFixed={false} />
 
       <main className='flex-grow'>
@@ -105,7 +105,7 @@ export default function HowAaruSimulatesPopulations() {
                 variants={headerTextVariants}
                 className='mx-auto max-w-3xl px-2 text-center sm:px-4 md:px-6 lg:px-8'
               >
-                <h1 className='mx-auto mb-2 text-center font-oracle text-[40px] font-[300] leading-[1.1] sm:mb-3 sm:max-w-none sm:text-[40px] md:text-[50px] md:leading-[50px]'>
+                <h1 className='font-oracle mx-auto mb-2 text-center text-[40px] font-[300] leading-[1.1] sm:mb-3 sm:max-w-none sm:text-[40px] md:text-[50px] md:leading-[50px]'>
                   How Aaru simulates entire <br /> populations to predict events
                 </h1>
                 <div className='mx-auto mb-4 mt-4 flex flex-row items-center justify-center gap-2 text-[13px] sm:mb-6 sm:text-[14px] md:text-[15px]'>

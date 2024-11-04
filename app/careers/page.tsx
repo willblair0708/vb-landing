@@ -54,7 +54,7 @@ const CareersPage = () => {
   };
 
   return (
-    <div className='min-h-screen bg-[#18181B] bg-black font-book font-oracle'>
+    <div className='font-oracle min-h-screen bg-[#18181B] bg-black font-book'>
       <div className='sm:px-8'>
         <Navbar isFixed={false} />
         <AnimatePresence mode='wait'>

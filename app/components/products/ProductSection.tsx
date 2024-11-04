@@ -75,7 +75,7 @@ export default function ProductSection({
         {id === 'dynamo-section' && (
           <motion.h3
             variants={itemVariants}
-            className='mb-32 max-w-md px-4 text-left font-book font-oracle text-[15px] leading-[18px] tracking-[-0.02em] text-gray-400 sm:px-0'
+            className='font-oracle mb-32 max-w-md px-4 text-left font-book text-[15px] leading-[18px] tracking-[-0.02em] text-gray-400 sm:px-0'
           >
             {PRODUCT_DESCRIPTION}
           </motion.h3>
@@ -109,7 +109,7 @@ export default function ProductSection({
             <h2 className='mb-6 font-light font-lt text-[64px] leading-tight'>
               {productName}
             </h2>
-            <h2 className='font-book font-oracle text-[24px] leading-snug tracking-tight text-[#C6C4C2]'>
+            <h2 className='font-oracle font-book text-[24px] leading-snug tracking-tight text-[#C6C4C2]'>
               {productDescription}
             </h2>
             <div className='mt-[100px] sm:mt-[200px]'>
