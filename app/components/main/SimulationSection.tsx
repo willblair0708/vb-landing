@@ -136,16 +136,15 @@ const generateProteins = (count: number): Protein[] => {
     }));
 };
 
-// Add these helper functions for more accurate scientific representations
-const generateDNASequence = () => {
-  const sequences = [
-    'GGACGATTTCAG',
-    'ACGTGCAGACTGA',
-    'CGTGACGTACGTC',
-    'TAATTAACAGGAA',
-  ];
-  return sequences;
-};
+// Add these helper functions for more accurate visualizations
+const generateDNASequence = () => ({
+  sequence: ['GGACGATTTCAG', 'ACGTGCAGACTGA', 'CGTGACGTACGTC', 'TAATTAACAGGAA'],
+  annotations: {
+    promoter: { start: 4, end: 10, color: 'rgb(59, 130, 246)' },
+    enhancer: { start: 15, end: 21, color: 'rgb(236, 72, 153)' },
+    coding: { start: 25, end: 31, color: 'rgb(16, 185, 129)' },
+  },
+});
 
 const generateMotifs = () => ({
   regulatory: {
@@ -160,43 +159,93 @@ const generateMotifs = () => ({
   },
 });
 
+const generateClusterData = () => ({
+  species1: {
+    name: 'H. sapiens',
+    nodes: [
+      { x: 100, y: 100, connections: [1, 2], expression: 0.8 },
+      { x: 180, y: 100, connections: [2], expression: 0.6 },
+      { x: 140, y: 160, connections: [0], expression: 0.9 },
+    ],
+    color: '#3B82F6',
+  },
+  species2: {
+    name: 'M. musculus',
+    nodes: [
+      { x: 100, y: 100, connections: [1, 2], expression: 0.7 },
+      { x: 180, y: 100, connections: [2], expression: 0.8 },
+      { x: 140, y: 160, connections: [0], expression: 0.5 },
+    ],
+    color: '#EC4899',
+  },
+});
+
 function StepVisualization({ step }: { step: string }) {
   switch (step) {
     case 'genome':
+      const dnaData = generateDNASequence();
       return (
         <div className='relative h-full w-full bg-zinc-950 p-8 font-mono'>
+          {/* Enhanced DNA Sequence Visualization */}
           <div className='grid gap-2'>
-            {generateDNASequence().map((seq, i) => (
+            {dnaData.sequence.map((seq, i) => (
               <motion.div
                 key={i}
-                className='whitespace-pre text-sm tracking-wider'
+                className='relative whitespace-pre text-sm tracking-wider'
                 initial={{ opacity: 0, x: -20 }}
                 animate={{ opacity: 1, x: 0 }}
                 transition={{ delay: i * 0.1 }}
               >
-                <span className='text-neutral-400'>{seq}</span>
+                <div className='flex items-center gap-4'>
+                  <span className='text-neutral-400'>{seq}</span>
+                  <motion.div
+                    className='h-0.5 flex-1 rounded-full bg-gradient-to-r from-blue-500/20 to-transparent'
+                    initial={{ scaleX: 0 }}
+                    animate={{ scaleX: 1 }}
+                    transition={{ delay: i * 0.1 + 0.2 }}
+                  />
+                </div>
               </motion.div>
             ))}
           </div>
-          {/* Scientific DNA Helix Animation */}
+
+          {/* Scientific DNA Double Helix */}
           <motion.div
-            className='absolute inset-0 opacity-10'
-            style={{
-              backgroundImage: 'url("/assets/patterns/dna-helix.svg")',
-              backgroundSize: '200px',
-              backgroundRepeat: 'repeat',
-              maskImage:
-                'linear-gradient(to bottom, transparent, black 20%, black 80%, transparent)',
-            }}
-            animate={{
-              backgroundPositionY: ['0%', '100%'],
-            }}
-            transition={{
-              duration: 20,
-              repeat: Infinity,
-              ease: 'linear',
-            }}
-          />
+            className='absolute inset-0'
+            initial={{ opacity: 0 }}
+            animate={{ opacity: 0.15 }}
+          >
+            <svg className='h-full w-full'>
+              <defs>
+                <linearGradient id='helix-gradient' x1='0' y1='0' x2='0' y2='1'>
+                  <stop
+                    offset='0%'
+                    stopColor='rgb(59, 130, 246)'
+                    stopOpacity='0.3'
+                  />
+                  <stop
+                    offset='50%'
+                    stopColor='rgb(236, 72, 153)'
+                    stopOpacity='0.3'
+                  />
+                  <stop
+                    offset='100%'
+                    stopColor='rgb(16, 185, 129)'
+                    stopOpacity='0.3'
+                  />
+                </linearGradient>
+              </defs>
+              <motion.path
+                d='M 50 0 C 150 50, 50 100, 150 150 C 250 200, 150 250, 250 300'
+                stroke='url(#helix-gradient)'
+                strokeWidth={2}
+                fill='none'
+                initial={{ pathLength: 0 }}
+                animate={{ pathLength: 1 }}
+                transition={{ duration: 2 }}
+              />
+            </svg>
+          </motion.div>
         </div>
       );
 
@@ -208,7 +257,7 @@ function StepVisualization({ step }: { step: string }) {
             <div className='font-mono text-sm'>
               {/* Enhanced Motif Discovery Visualization */}
               <motion.div className='mb-4 space-y-2'>
-                {generateDNASequence().map((seq, i) => (
+                {generateDNASequence().sequence.map((seq, i) => (
                   <div key={i} className='relative'>
                     {seq.includes(motifs.regulatory.sequence) ? (
                       <>
@@ -347,60 +396,55 @@ function StepVisualization({ step }: { step: string }) {
       );
 
     case 'clusters':
+      const clusterData = generateClusterData();
       return (
-        <div className='relative h-full w-full p-8'>
-          {/* Cross-Species Cluster Comparison - Matching diagram */}
-          <div className='grid grid-cols-2 gap-4'>
-            {[
-              {
-                color: '#3B82F6',
-                nodes: [
-                  [0, 0],
-                  [1, 0],
-                  [0, 1],
-                ],
-              },
-              {
-                color: '#EC4899',
-                nodes: [
-                  [0, 0],
-                  [1, 0],
-                  [1, 1],
-                ],
-              },
-            ].map((species, i) => (
+        <div className='relative h-full w-full bg-zinc-950 p-8'>
+          <div className='grid h-full grid-cols-2 gap-8'>
+            {[clusterData.species1, clusterData.species2].map((species, i) => (
               <motion.div
                 key={i}
-                className='relative rounded-lg border border-white/10 p-4'
-                initial={{ opacity: 0 }}
-                animate={{ opacity: 1 }}
+                className='relative rounded-xl border border-white/10 bg-white/5 p-6'
+                initial={{ opacity: 0, y: 20 }}
+                animate={{ opacity: 1, y: 0 }}
                 transition={{ delay: i * 0.2 }}
               >
+                <div className='mb-4 text-sm font-medium text-white/80'>
+                  {species.name}
+                </div>
                 <svg className='h-full w-full'>
-                  <g>
-                    {species.nodes.map((pos, j) => (
-                      <g key={j}>
-                        <circle
-                          cx={50 + pos[0] * 50}
-                          cy={50 + pos[1] * 50}
-                          r={10}
-                          fill={species.color}
-                          opacity={0.6}
+                  <defs>
+                    <radialGradient id={`gradient-${i}`}>
+                      <stop offset='0%' stopColor={`${species.color}40`} />
+                      <stop offset='100%' stopColor={`${species.color}00`} />
+                    </radialGradient>
+                  </defs>
+                  {species.nodes.map((node, j) => (
+                    <g key={j}>
+                      <motion.circle
+                        cx={node.x}
+                        cy={node.y}
+                        r={20}
+                        fill={`url(#gradient-${i})`}
+                        stroke={species.color}
+                        strokeWidth={2}
+                        initial={{ r: 0 }}
+                        animate={{ r: 20 * node.expression }}
+                        transition={{ duration: 1, delay: j * 0.1 }}
+                      />
+                      {node.connections.map((target) => (
+                        <motion.path
+                          key={`${j}-${target}`}
+                          d={`M ${node.x} ${node.y} L ${species.nodes[target].x} ${species.nodes[target].y}`}
+                          stroke={species.color}
+                          strokeWidth={1.5}
+                          strokeOpacity={0.6}
+                          initial={{ pathLength: 0 }}
+                          animate={{ pathLength: 1 }}
+                          transition={{ duration: 1, delay: j * 0.1 }}
                         />
-                        {j < species.nodes.length - 1 && (
-                          <line
-                            x1={50 + pos[0] * 50}
-                            y1={50 + pos[1] * 50}
-                            x2={50 + species.nodes[j + 1][0] * 50}
-                            y2={50 + species.nodes[j + 1][1] * 50}
-                            stroke={species.color}
-                            strokeWidth={2}
-                            opacity={0.4}
-                          />
-                        )}
-                      </g>
-                    ))}
-                  </g>
+                      ))}
+                    </g>
+                  ))}
                 </svg>
               </motion.div>
             ))}
@@ -410,83 +454,151 @@ function StepVisualization({ step }: { step: string }) {
 
     case 'proteins':
       return (
-        <div className='relative h-full w-full'>
-          {/* Protein Structure - Matching diagram style */}
-          <motion.div
-            className='absolute inset-0 flex items-center justify-center'
-            initial={{ opacity: 0 }}
-            animate={{ opacity: 1 }}
-          >
-            <div className='relative h-64 w-64'>
-              <motion.div
-                className='absolute inset-0'
-                style={{
-                  background:
-                    'linear-gradient(45deg, rgba(16, 185, 129, 0.2), rgba(16, 185, 129, 0.05))',
-                  borderRadius: '30% 70% 70% 30% / 30% 30% 70% 70%',
-                }}
-                animate={{
-                  borderRadius: [
-                    '30% 70% 70% 30% / 30% 30% 70% 70%',
-                    '70% 30% 30% 70% / 70% 70% 30% 30%',
-                  ],
-                }}
-                transition={{
-                  duration: 8,
-                  repeat: Infinity,
-                  repeatType: 'reverse',
-                }}
-              />
-            </div>
+        <div className='relative h-full w-full bg-zinc-950'>
+          <motion.div className='absolute inset-0'>
+            <svg className='h-full w-full'>
+              <defs>
+                <filter id='protein-glow'>
+                  <feGaussianBlur stdDeviation='4' result='blur' />
+                  <feMerge>
+                    <feMergeNode in='blur' />
+                    <feMergeNode in='SourceGraphic' />
+                  </feMerge>
+                </filter>
+                <radialGradient id='protein-core'>
+                  <stop
+                    offset='0%'
+                    stopColor='rgb(234, 179, 8)'
+                    stopOpacity='0.8'
+                  />
+                  <stop
+                    offset='100%'
+                    stopColor='rgb(234, 179, 8)'
+                    stopOpacity='0'
+                  />
+                </radialGradient>
+              </defs>
+
+              {/* Enhanced Protein Structure */}
+              <g filter='url(#protein-glow)'>
+                <motion.path
+                  d='M 100 200 C 150 150, 200 250, 300 200'
+                  stroke='rgb(234, 179, 8)'
+                  strokeWidth={4}
+                  fill='none'
+                  initial={{ pathLength: 0 }}
+                  animate={{ pathLength: 1 }}
+                  transition={{ duration: 2 }}
+                />
+
+                {/* Improved Amino Acid Residues */}
+                {Array.from({ length: 15 }).map((_, i) => (
+                  <motion.circle
+                    key={i}
+                    cx={120 + i * 15}
+                    cy={200 + Math.sin(i * 0.3) * 20}
+                    r={8}
+                    fill='url(#protein-core)'
+                    initial={{ scale: 0 }}
+                    animate={{
+                      scale: [1, 1.5, 1],
+                      opacity: [0.5, 1, 0.5],
+                    }}
+                    transition={{
+                      delay: i * 0.1,
+                      duration: 2,
+                      repeat: Infinity,
+                      ease: 'easeInOut',
+                    }}
+                  />
+                ))}
+              </g>
+            </svg>
           </motion.div>
         </div>
       );
 
     case 'virtual-cell':
       return (
-        <div className='relative h-full w-full'>
-          {/* Virtual Cell Model - Matching final diagram */}
-          <div className='absolute inset-0 rounded-full border border-emerald-500/20'>
+        <div className='relative h-full w-full bg-zinc-950'>
+          <motion.div
+            className='absolute inset-0 rounded-full'
+            style={{
+              background:
+                'radial-gradient(circle at center, rgba(16, 185, 129, 0.1), transparent)',
+            }}
+            animate={{
+              scale: [1, 1.05, 1],
+              rotate: [0, 5, -5, 0],
+            }}
+            transition={{
+              duration: 20,
+              repeat: Infinity,
+              ease: 'linear',
+            }}
+          >
+            {/* Cell Membrane */}
             <motion.div
-              className='absolute inset-0 rounded-full'
-              style={{
-                background:
-                  'radial-gradient(circle at center, rgba(16, 185, 129, 0.1), transparent)',
-              }}
+              className='absolute inset-0 rounded-full border border-emerald-500/20'
               animate={{
-                scale: [1, 1.05, 1],
-                rotate: [0, 5, -5, 0],
+                scale: [1, 1.02, 1],
+                opacity: [0.5, 0.8, 0.5],
               }}
               transition={{
-                duration: 20,
+                duration: 4,
                 repeat: Infinity,
-                ease: 'linear',
+                ease: 'easeInOut',
               }}
-            >
-              {/* Add organelles and proteins */}
-              {generateOrganelles(6).map((organelle, i) => (
-                <motion.div
-                  key={i}
-                  className='absolute rounded-full bg-gradient-to-br from-emerald-500/20 to-transparent'
-                  style={{
-                    left: `${organelle.x}%`,
-                    top: `${organelle.y}%`,
-                    width: organelle.size,
-                    height: organelle.size,
-                  }}
-                  animate={{
-                    x: [0, 10, -10, 0],
-                    y: [0, -10, 10, 0],
-                  }}
-                  transition={{
-                    duration: organelle.speed,
-                    repeat: Infinity,
-                    ease: 'linear',
-                  }}
-                />
-              ))}
-            </motion.div>
-          </div>
+            />
+
+            {/* Organelles with interactions */}
+            {generateOrganelles(6).map((organelle, i) => (
+              <motion.div
+                key={i}
+                className='absolute rounded-full bg-gradient-to-br from-emerald-500/20 to-transparent'
+                style={{
+                  left: `${organelle.x}%`,
+                  top: `${organelle.y}%`,
+                  width: organelle.size,
+                  height: organelle.size,
+                }}
+                animate={{
+                  x: [0, 10, -10, 0],
+                  y: [0, -10, 10, 0],
+                  scale: [1, 1.1, 1],
+                }}
+                transition={{
+                  duration: organelle.speed,
+                  repeat: Infinity,
+                  ease: 'linear',
+                  delay: organelle.delay,
+                }}
+              />
+            ))}
+
+            {/* Protein interactions */}
+            {generateProteins(15).map((protein, i) => (
+              <motion.div
+                key={i}
+                className='absolute h-2 w-2 rounded-full bg-yellow-500/50'
+                style={{
+                  left: `${protein.x}%`,
+                  top: `${protein.y}%`,
+                  filter: 'blur(1px)',
+                }}
+                animate={{
+                  x: [0, 20, -20, 0],
+                  y: [0, -20, 20, 0],
+                  opacity: [0.2, 0.8, 0.2],
+                }}
+                transition={{
+                  duration: protein.speed,
+                  repeat: Infinity,
+                  ease: 'linear',
+                }}
+              />
+            ))}
+          </motion.div>
         </div>
       );
 
