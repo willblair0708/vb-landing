@@ -93,11 +93,11 @@ export default function InsightsSection({ id }: InsightsSectionProps) {
           />
         </div>
 
-        {/* Organelles with Optimized Animations */}
+        {/* Knowledge Graph Nodes */}
         {generateOrganelles(12).map((organelle, i) => (
           <motion.div
             key={`organelle-${i}`}
-            className='absolute rounded-full bg-gradient-to-br from-emerald-500/20 via-emerald-500/10 to-transparent backdrop-blur-sm'
+            className='absolute rounded-full bg-gradient-to-br from-blue-500/20 via-purple-500/10 to-transparent backdrop-blur-sm'
             style={{
               left: `${organelle.x}%`,
               top: `${organelle.y}%`,
@@ -116,17 +116,16 @@ export default function InsightsSection({ id }: InsightsSectionProps) {
               ease: 'easeInOut',
             }}
           >
-            {/* Organelle Details */}
-            <div className='absolute inset-0 rounded-full border border-emerald-500/30' />
-            <div className='absolute inset-2 rounded-full border border-emerald-500/20' />
+            <div className='absolute inset-0 rounded-full border border-blue-500/30' />
+            <div className='absolute inset-2 rounded-full border border-purple-500/20' />
           </motion.div>
         ))}
 
-        {/* Enhanced Protein Interactions */}
+        {/* Gene Interactions */}
         {generateProteins(50).map((protein, i) => (
           <motion.div
             key={`protein-${i}`}
-            className='absolute h-1 w-1 rounded-full bg-yellow-500/50'
+            className='absolute h-1 w-1 rounded-full bg-cyan-500/50'
             style={{
               left: `${protein.x}%`,
               top: `${protein.y}%`,
@@ -145,7 +144,7 @@ export default function InsightsSection({ id }: InsightsSectionProps) {
           />
         ))}
 
-        {/* Neural Network Representation with Optimized Paths */}
+        {/* Neural Network Graph Connections */}
         <svg className='absolute inset-0 h-full w-full opacity-30'>
           <defs>
             <linearGradient
@@ -155,8 +154,8 @@ export default function InsightsSection({ id }: InsightsSectionProps) {
               x2='100%'
               y2='100%'
             >
-              <stop offset='0%' stopColor='rgba(16, 185, 129, 0.5)' />
-              <stop offset='100%' stopColor='rgba(255, 255, 255, 0.2)' />
+              <stop offset='0%' stopColor='rgba(59, 130, 246, 0.5)' />
+              <stop offset='100%' stopColor='rgba(139, 92, 246, 0.2)' />
             </linearGradient>
           </defs>
           <g filter='url(#glow)'>
@@ -197,38 +196,36 @@ export default function InsightsSection({ id }: InsightsSectionProps) {
           className='mx-auto max-w-[600px]'
         >
           <motion.div variants={itemVariants} className='text-left'>
-            {/* Enhanced Status Badge */}
             <div className='mb-8 inline-flex items-center gap-2 rounded-full border border-white/10 bg-white/5 px-4 py-2 backdrop-blur-sm'>
               <div className='relative h-2 w-2'>
-                <div className='absolute h-full w-full animate-ping rounded-full bg-emerald-500/30'></div>
-                <div className='relative h-full w-full rounded-full bg-emerald-500'></div>
+                <div className='absolute h-full w-full animate-ping rounded-full bg-blue-500/30'></div>
+                <div className='relative h-full w-full rounded-full bg-blue-500'></div>
               </div>
               <span className='text-sm font-medium text-white'>
-                Virtual Cell Technology
+                Knowledge Graph Technology
               </span>
             </div>
 
-            {/* Enhanced Content */}
             <h2 className='mb-6 font-rg text-3xl leading-tight tracking-tight text-white md:text-4xl lg:text-[2.75rem]'>
               <span className='bg-gradient-to-br from-white via-white/90 to-white/80 bg-clip-text text-transparent'>
-                Accelerating Discovery
+                Graph Neural Networks
               </span>
               <br />
-              Through AI Simulation
+              Powering Cell Simulation
             </h2>
 
             <p className='mb-8 text-lg leading-relaxed text-neutral-300'>
-              Our virtual cell models combine genomic data with advanced AI to
-              simulate cellular responses, enabling rapid drug testing and
-              development across diverse genetic backgrounds.
+              Our knowledge graphs capture complex gene interactions and cellular dynamics, 
+              enabling accurate prediction of drug responses across species. By integrating 
+              regulatory motifs and protein structures, we simulate genetic perturbations 
+              without extensive experimental data.
             </p>
 
-            {/* Enhanced Metrics Grid */}
             <div className='mb-12 grid grid-cols-3 gap-4'>
               {[
-                { value: '95', unit: '%', label: 'Accuracy' },
-                { value: '3B', unit: '$', label: 'Cost Savings' },
-                { value: '2000', unit: 'x', label: 'Faster Testing' },
+                { value: '100K+', unit: '', label: 'Gene Interactions' },
+                { value: '50+', unit: '', label: 'Species Models' },
+                { value: '99', unit: '%', label: 'Prediction Rate' },
               ].map((metric, i) => (
                 <motion.div
                   key={i}
@@ -249,11 +246,10 @@ export default function InsightsSection({ id }: InsightsSectionProps) {
               ))}
             </div>
 
-            {/* Enhanced CTA */}
             <motion.div variants={itemVariants}>
-              <Link href='/platform' className='group flex items-center gap-2'>
+              <Link href='/technology' className='group flex items-center gap-2'>
                 <span className='relative flex items-center gap-2'>
-                  Explore Platform
+                  Explore Our Technology
                   <ArrowIcon
                     className='transition-transform group-hover:translate-x-1'
                     color='#FFFFFF'
