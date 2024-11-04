@@ -6,7 +6,6 @@ import { useEffect, useRef, useState } from 'react';
 import { AnimatePresence, motion } from 'framer-motion';
 
 import useIsMobile from '@/hooks/use-is-mobile';
-import ArrowIcon from '@/public/assets/ui/Arrow';
 
 import Footer from './components/Footer';
 import FutureSection from './components/main/FutureSection';
@@ -14,7 +13,6 @@ import HeroSection from './components/main/HeroSection';
 import HumanitySection from './components/main/HumanitySection';
 import InsightsSection from './components/main/InsightsSection';
 import SimulationSection from './components/main/SimulationSection';
-import ModelBanner from './components/ModelBanner';
 
 export default function Home() {
   const isMobile = useIsMobile();
@@ -45,7 +43,6 @@ export default function Home() {
               key='home-page'
               className='min-h-screen overflow-hidden font-sans'
             >
-              <ModelBanner />
               <motion.main
                 ref={containerRef}
                 initial='visible'

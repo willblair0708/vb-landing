@@ -6,8 +6,8 @@ import { useState } from 'react';
 import { AnimatePresence, motion } from 'framer-motion';
 
 import * as SocialIcons from '@/public/assets/footer';
-import AaruIcon from '@/public/assets/ui/AaruFullIcon';
 import AaruWordmark from '@/public/assets/ui/AaruWordmark';
+import VBIcon from '@/public/assets/ui/VBIcon';
 
 // Constants
 const FOOTER_LINKS = [

@@ -4,7 +4,7 @@ import { memo } from 'react';
 import { AnimatePresence, motion } from 'framer-motion';
 
 import * as SocialIcons from '@/public/assets/footer';
-import AaruIcon from '@/public/assets/ui/AaruFullIcon';
+import VBIcon from '@/public/assets/ui/VBIcon';
 
 const SOCIAL_ICONS = [
   {
@@ -99,7 +99,7 @@ const MobileMenu = memo(
             whileHover={{ scale: 1.05 }}
             whileTap={{ scale: 0.95 }}
           >
-            <AaruIcon size={85.5} className='mt-6 text-black' color='black' />
+            <VBIcon size={85.5} className='mt-6 text-black' color='black' />
           </motion.div>
 
           <motion.button

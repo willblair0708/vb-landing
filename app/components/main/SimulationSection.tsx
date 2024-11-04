@@ -15,8 +15,8 @@ import {
 
 import * as icons from '@/app/icons';
 import useIsMobile from '@/hooks/use-is-mobile';
-import AaruIcon from '@/public/assets/ui/AaruFullIcon';
 import ArrowIcon from '@/public/assets/ui/Arrow';
+import VBIcon from '@/public/assets/ui/VBIcon';
 
 interface SimulationSectionProps {
   id: string;
@@ -247,7 +247,7 @@ function ProductPreview() {
     <div className='relative mt-16 h-[400px] w-full max-w-screen-2xl rounded-t-[40px] bg-black p-2 pb-0 sm:mt-32 sm:h-[600px] sm:p-4 sm:pb-0'>
       <div className='flex h-full w-full flex-col'>
         <nav className='flex w-full items-center justify-between rounded-xl bg-black px-8 pb-4 text-white'>
-          <AaruIcon className='mt-2' />
+          <VBIcon className='mt-2' />
           <div className='flex items-center gap-4 text-sm'>
             <svg
               width='23'
