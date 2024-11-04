@@ -180,6 +180,22 @@ const generateClusterData = () => ({
   },
 });
 
+// Add these sophisticated helper functions at the top
+const generateProteinStructure = () => ({
+  backbone: {
+    path: 'M 100 200 C 150 150, 200 250, 300 200 S 400 150, 500 200',
+    secondaryStructures: [
+      { type: 'helix', start: 0.2, end: 0.4 },
+      { type: 'sheet', start: 0.6, end: 0.8 },
+    ],
+  },
+  residues: Array.from({ length: 20 }).map((_, i) => ({
+    position: i,
+    type: ['hydrophobic', 'polar', 'charged'][Math.floor(Math.random() * 3)],
+    sideChainLength: Math.random() * 15 + 5,
+  })),
+});
+
 function StepVisualization({ step }: { step: string }) {
   switch (step) {
     case 'genome':
@@ -453,6 +469,7 @@ function StepVisualization({ step }: { step: string }) {
       );
 
     case 'proteins':
+      const proteinData = generateProteinStructure();
       return (
         <div className='relative h-full w-full bg-zinc-950'>
           <motion.div className='absolute inset-0'>
@@ -460,57 +477,103 @@ function StepVisualization({ step }: { step: string }) {
               <defs>
                 <filter id='protein-glow'>
                   <feGaussianBlur stdDeviation='4' result='blur' />
-                  <feMerge>
-                    <feMergeNode in='blur' />
-                    <feMergeNode in='SourceGraphic' />
-                  </feMerge>
+                  <feComposite in='SourceGraphic' in2='blur' operator='over' />
+                  <feColorMatrix
+                    type='matrix'
+                    values='0 0 0 0 0.917   0 0 0 0 0.701   0 0 0 0 0.031  0 0 0 1 0'
+                  />
                 </filter>
-                <radialGradient id='protein-core'>
+                <linearGradient id='helix-gradient' x1='0' y1='0' x2='1' y2='0'>
                   <stop
                     offset='0%'
                     stopColor='rgb(234, 179, 8)'
                     stopOpacity='0.8'
                   />
                   <stop
+                    offset='50%'
+                    stopColor='rgb(234, 179, 8)'
+                    stopOpacity='1'
+                  />
+                  <stop
                     offset='100%'
                     stopColor='rgb(234, 179, 8)'
-                    stopOpacity='0'
+                    stopOpacity='0.8'
                   />
-                </radialGradient>
+                </linearGradient>
               </defs>
 
-              {/* Enhanced Protein Structure */}
+              {/* Enhanced Protein Backbone */}
               <g filter='url(#protein-glow)'>
                 <motion.path
-                  d='M 100 200 C 150 150, 200 250, 300 200'
-                  stroke='rgb(234, 179, 8)'
+                  d={proteinData.backbone.path}
+                  stroke='url(#helix-gradient)'
                   strokeWidth={4}
                   fill='none'
                   initial={{ pathLength: 0 }}
                   animate={{ pathLength: 1 }}
-                  transition={{ duration: 2 }}
+                  transition={{ duration: 2, ease: 'easeInOut' }}
                 />
 
-                {/* Improved Amino Acid Residues */}
-                {Array.from({ length: 15 }).map((_, i) => (
-                  <motion.circle
+                {/* Secondary Structure Highlights */}
+                {proteinData.backbone.secondaryStructures.map((struct, i) => (
+                  <motion.path
                     key={i}
-                    cx={120 + i * 15}
-                    cy={200 + Math.sin(i * 0.3) * 20}
-                    r={8}
-                    fill='url(#protein-core)'
-                    initial={{ scale: 0 }}
+                    d={proteinData.backbone.path}
+                    strokeDasharray={struct.type === 'helix' ? '8 4' : '4 4'}
+                    strokeWidth={8}
+                    stroke='rgba(234, 179, 8, 0.3)'
+                    fill='none'
+                    strokeDashoffset={-i * 10}
+                    initial={{ opacity: 0 }}
                     animate={{
-                      scale: [1, 1.5, 1],
-                      opacity: [0.5, 1, 0.5],
+                      opacity: 1,
+                      strokeDashoffset: [-i * 10, -i * 20],
                     }}
                     transition={{
-                      delay: i * 0.1,
-                      duration: 2,
+                      duration: 3,
                       repeat: Infinity,
-                      ease: 'easeInOut',
+                      ease: 'linear',
                     }}
                   />
+                ))}
+
+                {/* Enhanced Amino Acid Residues */}
+                {proteinData.residues.map((residue, i) => (
+                  <g key={i}>
+                    <motion.circle
+                      cx={120 + i * 20}
+                      cy={200 + Math.sin(i * 0.3) * 20}
+                      r={residue.type === 'charged' ? 10 : 8}
+                      fill={`rgba(234, 179, 8, ${
+                        residue.type === 'hydrophobic' ? 0.8 : 0.6
+                      })`}
+                      initial={{ scale: 0 }}
+                      animate={{
+                        scale: [1, 1.2, 1],
+                        y: [0, -5, 0],
+                      }}
+                      transition={{
+                        delay: i * 0.1,
+                        duration: 2,
+                        repeat: Infinity,
+                        ease: 'easeInOut',
+                      }}
+                    />
+                    {/* Side Chain Representation */}
+                    <motion.line
+                      x1={120 + i * 20}
+                      y1={200 + Math.sin(i * 0.3) * 20}
+                      x2={120 + i * 20}
+                      y2={
+                        200 + Math.sin(i * 0.3) * 20 + residue.sideChainLength
+                      }
+                      stroke='rgba(234, 179, 8, 0.4)'
+                      strokeWidth={2}
+                      initial={{ pathLength: 0 }}
+                      animate={{ pathLength: 1 }}
+                      transition={{ delay: i * 0.1, duration: 1 }}
+                    />
+                  </g>
                 ))}
               </g>
             </svg>
@@ -521,84 +584,92 @@ function StepVisualization({ step }: { step: string }) {
     case 'virtual-cell':
       return (
         <div className='relative h-full w-full bg-zinc-950'>
+          {/* Enhanced Cell Membrane with Lipid Bilayer */}
           <motion.div
             className='absolute inset-0 rounded-full'
             style={{
-              background:
-                'radial-gradient(circle at center, rgba(16, 185, 129, 0.1), transparent)',
-            }}
-            animate={{
-              scale: [1, 1.05, 1],
-              rotate: [0, 5, -5, 0],
-            }}
-            transition={{
-              duration: 20,
-              repeat: Infinity,
-              ease: 'linear',
+              background: `
+                radial-gradient(circle at center,
+                  rgba(16, 185, 129, 0.05) 0%,
+                  rgba(16, 185, 129, 0.1) 45%,
+                  rgba(16, 185, 129, 0.15) 47%,
+                  rgba(16, 185, 129, 0.1) 49%,
+                  rgba(16, 185, 129, 0.05) 51%,
+                  transparent 53%
+                )
+              `,
             }}
           >
-            {/* Cell Membrane */}
-            <motion.div
-              className='absolute inset-0 rounded-full border border-emerald-500/20'
-              animate={{
-                scale: [1, 1.02, 1],
-                opacity: [0.5, 0.8, 0.5],
-              }}
-              transition={{
-                duration: 4,
-                repeat: Infinity,
-                ease: 'easeInOut',
-              }}
-            />
-
-            {/* Organelles with interactions */}
-            {generateOrganelles(6).map((organelle, i) => (
+            {/* Membrane Proteins */}
+            {Array.from({ length: 12 }).map((_, i) => (
               <motion.div
                 key={i}
-                className='absolute rounded-full bg-gradient-to-br from-emerald-500/20 to-transparent'
+                className='absolute h-4 w-1.5 bg-emerald-500/20'
                 style={{
-                  left: `${organelle.x}%`,
-                  top: `${organelle.y}%`,
-                  width: organelle.size,
-                  height: organelle.size,
+                  left: `${50 + 35 * Math.cos((i * Math.PI) / 6)}%`,
+                  top: `${50 + 35 * Math.sin((i * Math.PI) / 6)}%`,
+                  transform: `rotate(${i * 30}deg)`,
                 }}
                 animate={{
-                  x: [0, 10, -10, 0],
-                  y: [0, -10, 10, 0],
-                  scale: [1, 1.1, 1],
+                  scale: [1, 1.2, 1],
+                  opacity: [0.2, 0.4, 0.2],
                 }}
                 transition={{
-                  duration: organelle.speed,
+                  duration: 3,
                   repeat: Infinity,
-                  ease: 'linear',
-                  delay: organelle.delay,
-                }}
-              />
-            ))}
-
-            {/* Protein interactions */}
-            {generateProteins(15).map((protein, i) => (
-              <motion.div
-                key={i}
-                className='absolute h-2 w-2 rounded-full bg-yellow-500/50'
-                style={{
-                  left: `${protein.x}%`,
-                  top: `${protein.y}%`,
-                  filter: 'blur(1px)',
-                }}
-                animate={{
-                  x: [0, 20, -20, 0],
-                  y: [0, -20, 20, 0],
-                  opacity: [0.2, 0.8, 0.2],
-                }}
-                transition={{
-                  duration: protein.speed,
-                  repeat: Infinity,
-                  ease: 'linear',
+                  delay: i * 0.2,
                 }}
               />
             ))}
           </motion.div>
+
+          {/* Organelles with interactions */}
+          {generateOrganelles(6).map((organelle, i) => (
+            <motion.div
+              key={i}
+              className='absolute rounded-full bg-gradient-to-br from-emerald-500/20 to-transparent'
+              style={{
+                left: `${organelle.x}%`,
+                top: `${organelle.y}%`,
+                width: organelle.size,
+                height: organelle.size,
+              }}
+              animate={{
+                x: [0, 10, -10, 0],
+                y: [0, -10, 10, 0],
+                scale: [1, 1.1, 1],
+              }}
+              transition={{
+                duration: organelle.speed,
+                repeat: Infinity,
+                ease: 'linear',
+                delay: organelle.delay,
+              }}
+            />
+          ))}
+
+          {/* Protein interactions */}
+          {generateProteins(15).map((protein, i) => (
+            <motion.div
+              key={i}
+              className='absolute h-2 w-2 rounded-full bg-yellow-500/50'
+              style={{
+                left: `${protein.x}%`,
+                top: `${protein.y}%`,
+                filter: 'blur(1px)',
+              }}
+              animate={{
+                x: [0, 20, -20, 0],
+                y: [0, -20, 20, 0],
+                opacity: [0.2, 0.8, 0.2],
+              }}
+              transition={{
+                duration: protein.speed,
+                repeat: Infinity,
+                ease: 'linear',
+              }}
+            />
+          ))}
         </div>
       );
 
