@@ -76,13 +76,13 @@ export default function Home() {
                     </motion.div>
                   )
                 )}
-                <motion.div className='w-full'>
+                {/* <motion.div className='w-full'>
                   <HumanitySection
                     id='section-4'
                     bgColor='#000000'
                     isMobile={isMobile}
                   />
-                </motion.div>
+                </motion.div> */}
               </motion.main>
             </motion.div>
           </AnimatePresence>
