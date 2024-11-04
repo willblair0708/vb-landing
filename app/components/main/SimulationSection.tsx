@@ -8,9 +8,6 @@ import {
   useTransform,
 } from 'framer-motion';
 
-import * as icons from '@/app/icons';
-import ArrowIcon from '@/public/assets/ui/Arrow';
-
 interface SimulationSectionProps {
   id: string;
   bgColor: string;
@@ -139,46 +136,57 @@ const generateProteins = (count: number): Protein[] => {
     }));
 };
 
+// Add these helper functions for more accurate scientific representations
+const generateDNASequence = () => {
+  const sequences = [
+    'GGACGATTTCAG',
+    'ACGTGCAGACTGA',
+    'CGTGACGTACGTC',
+    'TAATTAACAGGAA',
+  ];
+  return sequences;
+};
+
+const generateMotifs = () => ({
+  regulatory: {
+    sequence: 'GTGCAG',
+    color: 'rgb(59, 130, 246)',
+    label: 'Regulatory Motif',
+  },
+  mirna: {
+    sequence: 'TAATAA',
+    color: 'rgb(239, 68, 68)',
+    label: 'miRNA Target Site',
+  },
+});
+
 function StepVisualization({ step }: { step: string }) {
   switch (step) {
     case 'genome':
       return (
         <div className='relative h-full w-full bg-zinc-950 p-8 font-mono'>
-          {/* DNA Sequence Grid - Exact scientific representation */}
           <div className='grid gap-2'>
-            <motion.div
-              className='whitespace-pre text-sm tracking-wider'
-              initial={{ opacity: 0 }}
-              animate={{ opacity: 1 }}
-            >
-              <span className='text-neutral-400'>GGACGATTTCAG</span>
-              <br />
-              <motion.span
-                className='text-blue-500'
-                animate={{ opacity: [0.4, 1, 0.4] }}
-                transition={{ duration: 2, repeat: Infinity }}
+            {generateDNASequence().map((seq, i) => (
+              <motion.div
+                key={i}
+                className='whitespace-pre text-sm tracking-wider'
+                initial={{ opacity: 0, x: -20 }}
+                animate={{ opacity: 1, x: 0 }}
+                transition={{ delay: i * 0.1 }}
               >
-                ACGTGCAGACTGA
-              </motion.span>
-              <br />
-              <span className='text-neutral-400'>CGTGACGTACGTC</span>
-              <br />
-              <motion.span
-                className='text-red-500'
-                animate={{ opacity: [0.4, 1, 0.4] }}
-                transition={{ duration: 2, repeat: Infinity, delay: 1 }}
-              >
-                TAATTAACAGGAA
-              </motion.span>
-            </motion.div>
+                <span className='text-neutral-400'>{seq}</span>
+              </motion.div>
+            ))}
           </div>
-          {/* DNA Double Helix Background */}
+          {/* Scientific DNA Helix Animation */}
           <motion.div
             className='absolute inset-0 opacity-10'
             style={{
               backgroundImage: 'url("/assets/patterns/dna-helix.svg")',
               backgroundSize: '200px',
               backgroundRepeat: 'repeat',
+              maskImage:
+                'linear-gradient(to bottom, transparent, black 20%, black 80%, transparent)',
             }}
             animate={{
               backgroundPositionY: ['0%', '100%'],
@@ -193,72 +201,75 @@ function StepVisualization({ step }: { step: string }) {
       );
 
     case 'motif':
+      const motifs = generateMotifs();
       return (
         <div className='relative h-full w-full bg-zinc-950 p-8'>
           <div className='space-y-4'>
             <div className='font-mono text-sm'>
-              {/* Motif Discovery with Scientific Accuracy */}
-              <motion.div
-                className='mb-4 space-y-2'
-                initial={{ opacity: 0 }}
-                animate={{ opacity: 1 }}
-              >
-                {/* Original sequence with highlighted motifs */}
-                <div className='relative'>
-                  <span className='text-neutral-400'>GGACGATTTCAG</span>
-                  <motion.div
-                    className='absolute -top-4 left-0 text-xs text-blue-400'
-                    initial={{ opacity: 0 }}
-                    animate={{ opacity: 1 }}
-                    transition={{ delay: 0.5 }}
-                  >
-                    Motif 1
-                  </motion.div>
-                </div>
-                <div className='relative'>
-                  <span className='text-neutral-400'>AC</span>
-                  <motion.span
-                    className='font-bold text-blue-500'
-                    animate={{
-                      backgroundColor: [
-                        'rgba(59,130,246,0)',
-                        'rgba(59,130,246,0.2)',
-                        'rgba(59,130,246,0)',
-                      ],
-                    }}
-                    transition={{ duration: 2, repeat: Infinity }}
-                  >
-                    GTGCAG
-                  </motion.span>
-                  <span className='text-neutral-400'>ACTGA</span>
-                </div>
-                <div className='relative'>
-                  <span className='text-neutral-400'>CGTGACGTACGTC</span>
-                </div>
-                <div className='relative'>
-                  <motion.span
-                    className='font-bold text-red-500'
-                    animate={{
-                      backgroundColor: [
-                        'rgba(239,68,68,0)',
-                        'rgba(239,68,68,0.2)',
-                        'rgba(239,68,68,0)',
-                      ],
-                    }}
-                    transition={{ duration: 2, repeat: Infinity, delay: 1 }}
-                  >
-                    TAATAA
-                  </motion.span>
-                  <span className='text-neutral-400'>TCAGGAA</span>
-                  <motion.div
-                    className='absolute -top-4 left-0 text-xs text-red-400'
-                    initial={{ opacity: 0 }}
-                    animate={{ opacity: 1 }}
-                    transition={{ delay: 1 }}
-                  >
-                    miRNA Target
-                  </motion.div>
-                </div>
+              {/* Enhanced Motif Discovery Visualization */}
+              <motion.div className='mb-4 space-y-2'>
+                {generateDNASequence().map((seq, i) => (
+                  <div key={i} className='relative'>
+                    {seq.includes(motifs.regulatory.sequence) ? (
+                      <>
+                        <span className='text-neutral-400'>
+                          {seq.split(motifs.regulatory.sequence)[0]}
+                        </span>
+                        <motion.span
+                          className='font-bold'
+                          style={{ color: motifs.regulatory.color }}
+                          animate={{
+                            backgroundColor: [
+                              'rgba(59,130,246,0)',
+                              'rgba(59,130,246,0.2)',
+                              'rgba(59,130,246,0)',
+                            ],
+                          }}
+                          transition={{
+                            duration: 2,
+                            repeat: Infinity,
+                            ease: 'easeInOut',
+                          }}
+                        >
+                          {motifs.regulatory.sequence}
+                        </motion.span>
+                        <span className='text-neutral-400'>
+                          {seq.split(motifs.regulatory.sequence)[1]}
+                        </span>
+                      </>
+                    ) : seq.includes(motifs.mirna.sequence) ? (
+                      <>
+                        <span className='text-neutral-400'>
+                          {seq.split(motifs.mirna.sequence)[0]}
+                        </span>
+                        <motion.span
+                          className='font-bold'
+                          style={{ color: motifs.mirna.color }}
+                          animate={{
+                            backgroundColor: [
+                              'rgba(239,68,68,0)',
+                              'rgba(239,68,68,0.2)',
+                              'rgba(239,68,68,0)',
+                            ],
+                          }}
+                          transition={{
+                            duration: 2,
+                            repeat: Infinity,
+                            ease: 'easeInOut',
+                            delay: 1,
+                          }}
+                        >
+                          {motifs.mirna.sequence}
+                        </motion.span>
+                        <span className='text-neutral-400'>
+                          {seq.split(motifs.mirna.sequence)[1]}
+                        </span>
+                      </>
+                    ) : (
+                      <span className='text-neutral-400'>{seq}</span>
+                    )}
+                  </div>
+                ))}
               </motion.div>
             </div>
           </div>
