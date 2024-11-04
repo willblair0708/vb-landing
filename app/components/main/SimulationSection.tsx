@@ -429,6 +429,46 @@ const renderHydrogenBonds = (
   ));
 };
 
+// Add these sophisticated biophysics simulation functions
+const generateMolecularDynamics = () => ({
+  // Protein folding energy landscape
+  energyLandscape: {
+    minima: Array(3)
+      .fill(0)
+      .map(() => ({
+        energy: -Math.random() * 20 - 10, // kcal/mol
+        coordinate: Math.random(),
+        width: Math.random() * 0.2 + 0.1,
+      })),
+    barriers: Array(2)
+      .fill(0)
+      .map(() => ({
+        height: Math.random() * 10 + 5,
+        position: Math.random(),
+      })),
+  },
+  // Molecular forces
+  forces: {
+    vanDerWaals: generateVanDerWaalsForces(),
+    electrostatic: generateElectrostaticForces(),
+    hydrophobic: generateHydrophobicForces(),
+    hydrogenBonds: generateHydrogenBondNetwork(),
+  },
+  // Solvent effects
+  solvent: {
+    waterBridges: Array(10)
+      .fill(0)
+      .map(() => ({
+        position: [Math.random() * 100, Math.random() * 100],
+        lifetime: Math.random() * 2 + 1, // ps
+        strength: Math.random() * 0.5 + 0.2, // kcal/mol
+      })),
+    ionicStrength: 0.15, // M
+    pH: 7.4,
+    temperature: 310, // K
+  },
+});
+
 function StepVisualization({ step }: { step: string }) {
   switch (step) {
     case 'genome':
@@ -702,193 +742,115 @@ function StepVisualization({ step }: { step: string }) {
       );
 
     case 'proteins':
-      const proteinData = generateProteinDynamics();
+      const molecularDynamics = generateMolecularDynamics();
       return (
         <div className='relative h-full w-full bg-zinc-950'>
           <motion.div className='absolute inset-0'>
             <svg className='h-full w-full'>
               <defs>
-                {/* Enhanced protein visualization filters */}
-                <filter id='protein-glow' filterUnits='userSpaceOnUse'>
-                  <feGaussianBlur stdDeviation='4' result='blur' />
-                  <feComposite in='SourceGraphic' in2='blur' operator='over' />
-                  <feColorMatrix
-                    type='matrix'
-                    values='0 0 0 0 0.917   0 0 0 0 0.701   0 0 0 0 0.031  0 0 0 1 0'
-                  />
+                {/* Enhanced molecular visualization filters */}
+                <filter id='molecular-dynamics' filterUnits='userSpaceOnUse'>
                   <feTurbulence
                     type='fractalNoise'
                     baseFrequency='0.01'
-                    numOctaves='2'
+                    numOctaves='3'
                     result='noise'
                   />
-                  <feDisplacementMap in='SourceGraphic' in2='noise' scale='5' />
+                  <feDisplacementMap in='SourceGraphic' in2='noise' scale='3' />
+                  <feGaussianBlur stdDeviation='1' />
                 </filter>
 
-                {/* Improved gradients for different amino acid types */}
-                <radialGradient id='hydrophobic-core'>
-                  <stop
-                    offset='0%'
-                    stopColor='rgb(234, 179, 8)'
-                    stopOpacity='0.8'
-                  />
-                  <stop
-                    offset='100%'
-                    stopColor='rgb(234, 179, 8)'
-                    stopOpacity='0.2'
-                  />
-                </radialGradient>
-                <radialGradient id='polar-core'>
+                {/* Improved chemical gradients */}
+                <radialGradient id='hydration-sphere'>
                   <stop
                     offset='0%'
                     stopColor='rgb(147, 197, 253)'
-                    stopOpacity='0.8'
+                    stopOpacity='0.3'
                   />
                   <stop
                     offset='100%'
                     stopColor='rgb(147, 197, 253)'
-                    stopOpacity='0.2'
+                    stopOpacity='0'
                   />
                 </radialGradient>
-                <radialGradient id='charged-core'>
+
+                {/* Energy landscape gradient */}
+                <linearGradient
+                  id='energy-gradient'
+                  x1='0'
+                  y1='0'
+                  x2='0'
+                  y2='1'
+                >
                   <stop
                     offset='0%'
                     stopColor='rgb(239, 68, 68)'
                     stopOpacity='0.8'
                   />
                   <stop
-                    offset='100%'
-                    stopColor='rgb(239, 68, 68)'
-                    stopOpacity='0.2'
+                    offset='50%'
+                    stopColor='rgb(234, 179, 8)'
+                    stopOpacity='0.6'
                   />
-                </radialGradient>
+                  <stop
+                    offset='100%'
+                    stopColor='rgb(34, 197, 94)'
+                    stopOpacity='0.4'
+                  />
+                </linearGradient>
               </defs>
 
-              {/* Enhanced Protein Backbone with Secondary Structure */}
-              <g filter='url(#protein-glow)'>
-                {/* Alpha Helix Representation */}
-                {proteinData.backbone.secondaryStructures
-                  .filter((struct) => struct.type === 'helix')
-                  .map((helix, i) => (
-                    <motion.path
-                      key={`helix-${i}`}
-                      d={generateHelixPath(
-                        helix.start,
-                        helix.end,
-                        helix.pitch,
-                        helix.residuesPerTurn
-                      )}
-                      stroke='url(#helix-gradient)'
-                      strokeWidth={6}
-                      fill='none'
-                      initial={{ pathLength: 0 }}
-                      animate={{ pathLength: 1 }}
-                      transition={{ duration: 2, ease: 'easeInOut' }}
-                    />
-                  ))}
+              {/* Energy Landscape Visualization */}
+              <g className='energy-landscape' filter='url(#molecular-dynamics)'>
+                {molecularDynamics.energyLandscape.minima.map((minimum, i) => (
+                  <motion.path
+                    key={`minimum-${i}`}
+                    d={generateEnergyWell(minimum)}
+                    fill='url(#energy-gradient)'
+                    opacity={0.3}
+                    initial={{ pathLength: 0 }}
+                    animate={{ pathLength: 1 }}
+                    transition={{ duration: 2, delay: i * 0.5 }}
+                  />
+                ))}
+              </g>
 
-                {/* Beta Sheet Representation */}
-                {proteinData.backbone.secondaryStructures
-                  .filter((struct) => struct.type === 'sheet')
-                  .map((sheet, i) => (
-                    <g key={`sheet-${i}`}>
-                      <motion.path
-                        d={generateSheetPath(
-                          sheet.start,
-                          sheet.end,
-                          sheet.pleatWidth
-                        )}
-                        stroke='rgba(234, 179, 8, 0.6)'
-                        strokeWidth={8}
-                        fill='none'
-                        initial={{ opacity: 0 }}
-                        animate={{ opacity: 1 }}
-                      />
-                      {sheet.hydrogenBonds && generateHydrogenBondPaths(sheet)}
-                    </g>
-                  ))}
-
-                {/* Enhanced Amino Acid Residues with Physical Properties */}
-                {proteinData.residues.map((residue, i) => (
-                  <g key={i}>
+              {/* Solvent Effects */}
+              <g className='solvent-effects'>
+                {molecularDynamics.solvent.waterBridges.map((bridge, i) => (
+                  <motion.g key={`water-${i}`}>
                     <motion.circle
-                      cx={120 + i * 20}
-                      cy={200 + Math.sin(i * 0.3) * 20}
-                      r={getResidueRadius(residue)}
-                      fill={`url(#${residue.type}-core)`}
-                      initial={{ scale: 0 }}
+                      cx={bridge.position[0]}
+                      cy={bridge.position[1]}
+                      r={bridge.strength * 10}
+                      fill='url(#hydration-sphere)'
                       animate={{
-                        scale: [1, 1.2, 1],
-                        y: [0, -5 * residue.hydrophobicity, 0],
+                        r: [
+                          bridge.strength * 10,
+                          bridge.strength * 12,
+                          bridge.strength * 10,
+                        ],
+                        opacity: [0.3, 0.6, 0.3],
                       }}
                       transition={{
-                        delay: i * 0.1,
-                        duration: 2 + residue.hydrophobicity,
+                        duration: bridge.lifetime,
                         repeat: Infinity,
                         ease: 'easeInOut',
                       }}
                     />
-
-                    {/* Side Chain Dynamics */}
-                    <motion.g>
-                      <motion.line
-                        x1={120 + i * 20}
-                        y1={200 + Math.sin(i * 0.3) * 20}
-                        x2={120 + i * 20}
-                        y2={
-                          200 + Math.sin(i * 0.3) * 20 + residue.sideChainLength
-                        }
-                        stroke={getSideChainColor(residue)}
-                        strokeWidth={2}
-                        initial={{ pathLength: 0 }}
-                        animate={{
-                          pathLength: 1,
-                          rotate: [0, residue.rotamerState * 120, 0],
-                        }}
-                        transition={{
-                          delay: i * 0.1,
-                          duration: 3,
-                          repeat: Infinity,
-                        }}
-                      />
-
-                      {/* Charge Visualization */}
-                      {residue.charge !== 0 && (
-                        <motion.circle
-                          cx={120 + i * 20}
-                          cy={
-                            200 +
-                            Math.sin(i * 0.3) * 20 +
-                            residue.sideChainLength
-                          }
-                          r={4}
-                          fill={
-                            residue.charge > 0
-                              ? 'rgb(239, 68, 68)'
-                              : 'rgb(59, 130, 246)'
-                          }
-                          animate={{
-                            opacity: [0.4, 1, 0.4],
-                            scale: [1, 1.2, 1],
-                          }}
-                          transition={{
-                            duration: 2,
-                            repeat: Infinity,
-                          }}
-                        />
-                      )}
-                    </motion.g>
-                  </g>
+                  </motion.g>
                 ))}
+              </g>
 
-                {/* Molecular Interactions */}
-                <g className='interactions'>
-                  {renderHydrophobicInteractions(
-                    proteinData.interactions.hydrophobic
-                  )}
-                  {renderIonicBonds(proteinData.interactions.ionic)}
-                  {renderHydrogenBonds(proteinData.interactions.hydrogenBonds)}
-                </g>
+              {/* Molecular Forces Visualization */}
+              <g className='molecular-forces'>
+                {Object.entries(molecularDynamics.forces).map(
+                  ([forceType, forces], i) => (
+                    <g key={forceType} className={`force-${forceType}`}>
+                      {renderMolecularForces(forceType, forces)}
+                    </g>
+                  )
+                )}
               </g>
             </svg>
           </motion.div>
@@ -991,6 +953,113 @@ function StepVisualization({ step }: { step: string }) {
       return null;
   }
 }
+
+// Helper functions for molecular visualization
+const generateEnergyWell = (minimum: {
+  energy: number;
+  coordinate: number;
+  width: number;
+}) => {
+  const points = Array(50)
+    .fill(0)
+    .map((_, i) => {
+      const x = i * 2;
+      const y =
+        minimum.energy *
+        Math.exp(-Math.pow((i / 50 - minimum.coordinate) / minimum.width, 2));
+      return `${x},${y + 150}`;
+    });
+  return `M ${points.join(' L ')}`;
+};
+
+const renderMolecularForces = (forceType: string, forces: any[]) => {
+  switch (forceType) {
+    case 'vanDerWaals':
+      return forces.map((force, i) => (
+        <motion.path
+          key={`vdw-${i}`}
+          d={generateVanDerWaalsPath(force)}
+          stroke='rgba(147, 197, 253, 0.3)'
+          strokeWidth={1}
+          fill='none'
+          initial={{ pathLength: 0 }}
+          animate={{ pathLength: 1 }}
+          transition={{ duration: 1, delay: i * 0.1 }}
+        />
+      ));
+    // ... similar cases for other force types ...
+  }
+};
+
+// Add these molecular force field generators
+const generateVanDerWaalsForces = () => {
+  return Array(15)
+    .fill(0)
+    .map(() => ({
+      atom1: { x: Math.random() * 100, y: Math.random() * 100 },
+      atom2: { x: Math.random() * 100, y: Math.random() * 100 },
+      sigma: Math.random() * 2 + 3, // Lennard-Jones parameter (Å)
+      epsilon: -(Math.random() * 0.5 + 0.1), // Well depth (kcal/mol)
+      distance: Math.random() * 5 + 3, // Current distance (Å)
+    }));
+};
+
+const generateElectrostaticForces = () => {
+  return Array(10)
+    .fill(0)
+    .map(() => ({
+      charge1: Math.random() * 2 - 1, // Partial charges (-1 to +1)
+      charge2: Math.random() * 2 - 1,
+      position1: { x: Math.random() * 100, y: Math.random() * 100 },
+      position2: { x: Math.random() * 100, y: Math.random() * 100 },
+      dielectric: 80, // Water dielectric constant
+      debyeLength: 10, // Debye screening length (Å)
+    }));
+};
+
+const generateHydrophobicForces = () => {
+  return Array(8)
+    .fill(0)
+    .map(() => ({
+      residue1: {
+        x: Math.random() * 100,
+        y: Math.random() * 100,
+        hydrophobicity: Math.random(),
+      },
+      residue2: {
+        x: Math.random() * 100,
+        y: Math.random() * 100,
+        hydrophobicity: Math.random(),
+      },
+      surfaceArea: Math.random() * 50 + 20, // Buried surface area (Å²)
+      strength: Math.random() * 0.3 + 0.1, // Hydrophobic effect strength (kcal/mol/Å²)
+    }));
+};
+
+const generateHydrogenBondNetwork = () => {
+  return Array(20)
+    .fill(0)
+    .map(() => ({
+      donor: { x: Math.random() * 100, y: Math.random() * 100 },
+      acceptor: { x: Math.random() * 100, y: Math.random() * 100 },
+      strength: -(Math.random() * 3 + 2), // H-bond energy (kcal/mol)
+      angle: Math.random() * 30 + 150, // D-H-A angle (degrees)
+      distance: Math.random() * 0.5 + 2.5, // H-bond length (Å)
+    }));
+};
+
+const generateVanDerWaalsPath = (
+  force: ReturnType<typeof generateVanDerWaalsForces>[0]
+) => {
+  const { atom1, atom2, sigma, distance } = force;
+  const repulsion = Math.pow(sigma / distance, 12);
+  const attraction = Math.pow(sigma / distance, 6);
+  const energy = repulsion - attraction;
+
+  return `M ${atom1.x} ${atom1.y} Q ${(atom1.x + atom2.x) / 2} ${
+    (atom1.y + atom2.y) / 2 + energy * 10
+  } ${atom2.x} ${atom2.y}`;
+};
 
 export default function SimulationSection({
   id,

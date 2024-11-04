@@ -193,11 +193,6 @@ export default function Footer() {
               href='/'
               className='group mb-6 inline-flex items-center gap-3 transition-transform duration-300 hover:translate-x-0.5'
             >
-              <div className='relative h-8 w-8'>
-                <div className='absolute inset-0 rounded-lg bg-gradient-to-tr from-white/10 to-white/5' />
-                <div className='absolute inset-0 rounded-lg bg-black/50 backdrop-blur-sm' />
-                <AaruWordmark className='relative h-full w-full p-1.5 text-white' />
-              </div>
               <span className='text-xl font-semibold tracking-tight text-white'>
                 Virtual Biology
               </span>
