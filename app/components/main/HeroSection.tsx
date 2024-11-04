@@ -186,7 +186,7 @@ export default function HeroSection({ id, isMobile }: HeroSectionProps) {
 
         <div className='relative h-full'>
           <Image
-            src='/assets/main/virtual.webp'
+            src='/assets/main/virtual.jpg'
             alt='AI-powered cell simulation visualization'
             fill
             priority

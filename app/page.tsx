@@ -85,6 +85,7 @@ export default function Home() {
                 </motion.div> */}
               </motion.main>
             </motion.div>
+            <FutureSection id='section-5' bgColor='#18181B' />
           </AnimatePresence>
           <Footer />
         </>

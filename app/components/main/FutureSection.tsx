@@ -55,7 +55,12 @@ export default function FutureSection({ id, bgColor }: FutureSectionProps) {
     },
   };
 
-  const roles = ['Full Stack Engineer', 'Research Engineer'];
+  const roles = [
+    'Research Engineer',
+    'Full Stack Engineer',
+    'Computational Biologist',
+    'Machine Learning Engineer',
+  ];
 
   const handleRoleClick = (role: string) => {
     router.push(
@@ -80,9 +85,14 @@ export default function FutureSection({ id, bgColor }: FutureSectionProps) {
             animate={{ opacity: 1, y: 0 }}
             transition={{ duration: 0.8, delay: 0.2 }}
           >
-            We are building simulation engines that meaningfully predict the
-            future.
+            Revolutionizing Drug Discovery Through AI-Powered Virtual Cell
+            Models
           </motion.h2>
+          <motion.p className='mx-auto mb-8 max-w-2xl text-lg text-neutral-300/90'>
+            Our genomic language models learn directly from DNA sequences,
+            enabling accurate predictions of cellular responses across diverse
+            genetic backgrounds.
+          </motion.p>
           <motion.div
             className='mt-10 flex flex-col items-center sm:mt-20'
             initial={{ opacity: 0, y: 20 }}
@@ -114,30 +124,36 @@ export default function FutureSection({ id, bgColor }: FutureSectionProps) {
           </motion.div>
         </motion.div>
 
-        {/* Founders section */}
+        {/* Leadership section
         <motion.div
           variants={itemVariants}
           className='mb-16 mt-16 flex flex-col items-center justify-center gap-[30px] lg:mt-40 lg:flex-row'
         >
-          <FounderPortrait
-            name='Ned Koh'
+          <TeamMember
+            name='Will Blair'
+            role='Co-Founder & CEO'
             index={0}
-            slug='portrait_ned.png'
-            linkedin='nededwardkoh'
+            slug='portrait_will.png'
+            linkedin='willblair'
+            credentials='Kleiner Perkins Engineer in Residence, Johns Hopkins'
           />
-          <FounderPortrait
-            name='Cam Fink'
+          <TeamMember
+            name='Nate Tippens'
+            role='Co-Founder & CTO'
             index={1}
-            slug='portrait_cam.png'
-            linkedin='cameron-fink'
+            slug='portrait_nate.png'
+            linkedin='natetippens'
+            credentials='MIT Postdoc, Cornell PhD'
           />
-          <FounderPortrait
-            name='John Kessler'
+          <TeamMember
+            name='Alex Garruss'
+            role='Scientific Advisor'
             index={2}
-            slug='portrait_john.png'
-            linkedin='johncolekessler'
+            slug='portrait_alex.png'
+            linkedin='alexgarruss'
+            credentials='Harvard PhD, Stowers Institute'
           />
-        </motion.div>
+        </motion.div> */}
 
         {/* Roles Section */}
         <motion.div
@@ -198,10 +214,10 @@ export default function FutureSection({ id, bgColor }: FutureSectionProps) {
             <span className='text-white/50'>
               Get in touch:{' '}
               <Link
-                href='mailto:jobs@aaru.com'
+                href='mailto:jobs@virtualbio.com'
                 className='group relative inline-block text-white hover:underline'
               >
-                jobs@aaru.com
+                jobs@virtualbio.com
                 <motion.div
                   className='absolute bottom-0 left-0 h-[1px] w-full origin-left bg-white'
                   initial={{ scaleX: 0 }}
@@ -217,17 +233,20 @@ export default function FutureSection({ id, bgColor }: FutureSectionProps) {
   );
 }
 
-function FounderPortrait({
+function TeamMember({
   name,
+  role,
   index,
   slug,
   linkedin,
+  credentials,
 }: {
   name: string;
+  role: string;
   index: number;
   slug: string;
-
   linkedin: string;
+  credentials: string;
 }) {
   return (
     <motion.div
@@ -245,24 +264,27 @@ function FounderPortrait({
         transition={{ duration: 0.3 }}
       >
         <Image
-          src={`/assets/founders/${slug}`}
+          src={`/assets/team/${slug}`}
           className='!aspect-[0.83] h-full w-auto object-cover sm:max-h-[500px] lg:max-h-[538px]'
           height={538}
           width={448}
           alt={name}
         />
         <motion.div
-          className='absolute bottom-[10px] left-[10px] flex h-[120px] w-[180px] flex-col justify-between bg-[#03E87A] p-3 sm:h-[130px] sm:w-[190px] sm:p-4 lg:h-[143px] lg:w-[207px]'
+          className='absolute bottom-[10px] left-[10px] flex h-[140px] w-[220px] flex-col justify-between bg-[#03E87A] p-4 sm:h-[150px] sm:w-[230px] lg:h-[163px] lg:w-[247px]'
           initial={{ y: 0, x: 0 }}
           whileHover={{ y: -5, x: 5 }}
           transition={{ duration: 0.3 }}
         >
           <div>
-            <h3 className='mb-2.5 border-t border-black pt-2.5 font-book text-lg tracking-tight text-black'>
+            <h3 className='mb-2 border-t border-black pt-2.5 font-book text-lg tracking-tight text-black'>
               {name}
             </h3>
             <p className='font-book text-sm tracking-tight text-black'>
-              Co-Founder
+              {role}
+            </p>
+            <p className='mt-1 font-book text-xs tracking-tight text-black/70'>
+              {credentials}
             </p>
           </div>
           <div className='flex space-x-2'>

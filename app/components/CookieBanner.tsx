@@ -31,7 +31,7 @@ export default function CookieBanner() {
   >(undefined);
   const [showPreferences, setShowPreferences] = useState(false);
   const [preferences, setPreferences] = useState<CookiePreferences>({
-    necessary: true, // Always true as these are essential
+    necessary: true,
     analytics: false,
     marketing: false,
   });
@@ -94,20 +94,22 @@ export default function CookieBanner() {
     <AnimatePresence>
       {consentGiven === 'undecided' && (
         <motion.div
-          className='fixed bottom-0 left-0 right-0 z-50 mx-auto mb-4 w-[calc(100%-2rem)] max-w-[450px] bg-[#303036] p-6 sm:bottom-8 sm:left-8 sm:right-auto sm:mx-0 sm:mb-0 sm:w-[450px]'
-          initial={{ opacity: 0, y: 50 }}
-          animate={{ opacity: 1, y: 0 }}
-          exit={{ opacity: 0, y: 50 }}
-          transition={{ type: 'spring', damping: 20, stiffness: 300 }}
+          className='fixed bottom-0 left-0 right-0 z-50 mx-auto mb-4 w-[calc(100%-2rem)] max-w-[500px] rounded-2xl border border-white/10 bg-black/90 p-8 backdrop-blur-xl sm:bottom-8 sm:left-8 sm:right-auto sm:mx-0 sm:mb-0 sm:w-[500px]'
+          initial={{ opacity: 0, y: 50, scale: 0.95 }}
+          animate={{ opacity: 1, y: 0, scale: 1 }}
+          exit={{ opacity: 0, y: 50, scale: 0.9 }}
+          transition={{ type: 'spring', damping: 30, stiffness: 400 }}
         >
           {!showPreferences ? (
-            <div className='flex h-full flex-col justify-between space-y-6 sm:space-y-4'>
+            <div className='flex h-full flex-col justify-between space-y-8'>
               <div className='space-y-4'>
-                <div className='flex justify-between'>
-                  <h2 className='text-[15px] text-white'>How we use cookies</h2>
+                <div className='flex items-center justify-between'>
+                  <h2 className='bg-gradient-to-r from-white via-white/90 to-white/80 bg-clip-text text-lg font-medium text-transparent'>
+                    Privacy Settings
+                  </h2>
                   <button
                     onClick={handleDeclineCookies}
-                    className='text-white hover:opacity-80'
+                    className='text-white/60 transition-colors hover:text-white'
                   >
                     <svg
                       width='15'
@@ -115,19 +117,20 @@ export default function CookieBanner() {
                       viewBox='0 0 15 15'
                       fill='none'
                       xmlns='http://www.w3.org/2000/svg'
+                      className='opacity-60 transition-opacity hover:opacity-100'
                     >
                       <path
                         fillRule='evenodd'
                         clipRule='evenodd'
                         d='M8.63488 7.0723L15.0001 0.707107L14.293 0L7.92777 6.3652L1.56258 0L0.855469 0.707107L7.22066 7.0723L0.855469 13.4375L1.56258 14.1446L7.92777 7.77941L14.293 14.1446L15.0001 13.4375L8.63488 7.0723Z'
-                        fill='white'
+                        fill='currentColor'
                       />
                     </svg>
                   </button>
                 </div>
-                <p className='font-oracle font-book text-[15px] leading-[18px] text-white opacity-70'>
-                  We use our own and third-party cookies to personalize content
-                  and to analyze web traffic. Learn about our privacy policy.
+                <p className='text-[15px] leading-relaxed text-white/60'>
+                  We use advanced analytics to enhance your experience and
+                  improve our services. Your privacy matters to us.
                 </p>
               </div>
 
@@ -135,115 +138,111 @@ export default function CookieBanner() {
                 <div className='flex gap-2'>
                   <motion.button
                     onClick={handleAcceptCookies}
-                    className='inline-flex h-[22px] items-center justify-center gap-2.5 rounded-full bg-white px-2 py-1 hover:bg-[#E9E9E9]'
+                    className='group relative inline-flex h-9 items-center justify-center gap-2 rounded-full bg-white/10 px-4 backdrop-blur-sm transition-all hover:bg-white/20'
+                    whileHover={{ scale: 1.02 }}
+                    whileTap={{ scale: 0.98 }}
                   >
-                    <span className='font-oracle text-xs font-normal uppercase leading-[14.40px] tracking-wide text-zinc-900'>
-                      ACCEPT ALL
+                    <span className='text-sm font-medium text-white'>
+                      Accept All
                     </span>
                   </motion.button>
 
                   <motion.button
                     onClick={handleDeclineCookies}
-                    className='inline-flex h-[22px] items-center justify-center gap-2.5 rounded-full bg-black px-2 py-1 hover:bg-[#303036]'
+                    className='group relative inline-flex h-9 items-center justify-center gap-2 rounded-full border border-white/10 px-4 transition-all hover:bg-white/5'
+                    whileHover={{ scale: 1.02 }}
+                    whileTap={{ scale: 0.98 }}
                   >
-                    <span className='font-oracle text-xs font-normal uppercase leading-[14.40px] tracking-wide text-white'>
-                      REJECT ALL
+                    <span className='text-sm font-medium text-white/80'>
+                      Decline
                     </span>
                   </motion.button>
                 </div>
 
                 <motion.button
                   onClick={() => setShowPreferences(true)}
-                  className='inline-flex h-[22px] w-fit items-center justify-center gap-2.5 rounded-full bg-black px-2 py-1 hover:bg-[#303036]'
+                  className='group relative inline-flex h-9 items-center justify-center gap-2 rounded-full border border-white/10 px-4 transition-all hover:bg-white/5'
+                  whileHover={{ scale: 1.02 }}
+                  whileTap={{ scale: 0.98 }}
                 >
-                  <span className='font-oracle text-xs font-normal uppercase leading-[14.40px] tracking-wide text-white'>
-                    MANAGE PREFERENCES
+                  <span className='text-sm font-medium text-white/80'>
+                    Customize
                   </span>
                 </motion.button>
               </div>
             </div>
           ) : (
-            <div className='space-y-4'>
-              <h2 className='text-[15px] text-white'>Cookie Preferences</h2>
+            <div className='space-y-6'>
+              <h2 className='bg-gradient-to-r from-white via-white/90 to-white/80 bg-clip-text text-lg font-medium text-transparent'>
+                Cookie Preferences
+              </h2>
 
-              <div className='space-y-3'>
-                <div className='flex items-center justify-between'>
-                  <label className='text-white'>
-                    <span className='font-oracle text-[13px]'>
-                      Necessary Cookies
-                    </span>
-                    <p className='text-[12px] opacity-70'>
-                      Required for the website to function
-                    </p>
-                  </label>
-                  <input
-                    type='checkbox'
-                    checked={preferences.necessary}
-                    disabled
-                    className='h-4 w-4 rounded border-gray-300'
-                  />
-                </div>
-
-                <div className='flex items-center justify-between'>
-                  <label className='text-white'>
-                    <span className='font-oracle text-[13px]'>
-                      Analytics Cookies
-                    </span>
-                    <p className='text-[12px] opacity-70'>
-                      Help us improve our website
-                    </p>
-                  </label>
-                  <input
-                    type='checkbox'
-                    checked={preferences.analytics}
-                    onChange={(e) =>
-                      setPreferences((prev) => ({
-                        ...prev,
-                        analytics: e.target.checked,
-                      }))
-                    }
-                    className='h-4 w-4 rounded border-gray-300 bg-black'
-                  />
-                </div>
-
-                <div className='flex items-center justify-between'>
-                  <label className='text-white'>
-                    <span className='font-oracle text-[13px]'>
-                      Marketing Cookies
-                    </span>
-                    <p className='text-[12px] opacity-70'>
-                      Used for targeted advertising
-                    </p>
-                  </label>
-                  <input
-                    type='checkbox'
-                    checked={preferences.marketing}
-                    onChange={(e) =>
-                      setPreferences((prev) => ({
-                        ...prev,
-                        marketing: e.target.checked,
-                      }))
-                    }
-                    className='h-4 w-4 rounded border-gray-300'
-                  />
-                </div>
+              <div className='space-y-4'>
+                {[
+                  {
+                    title: 'Essential Cookies',
+                    description: 'Required for core functionality',
+                    key: 'necessary' as const,
+                    disabled: true,
+                  },
+                  {
+                    title: 'Analytics',
+                    description: 'Help us understand usage patterns',
+                    key: 'analytics' as const,
+                  },
+                  {
+                    title: 'Marketing',
+                    description: 'Personalized recommendations',
+                    key: 'marketing' as const,
+                  },
+                ].map((item) => (
+                  <div
+                    key={item.key}
+                    className='flex items-center justify-between rounded-lg border border-white/5 bg-white/5 p-4 backdrop-blur-sm transition-colors hover:bg-white/10'
+                  >
+                    <label className='flex-1'>
+                      <span className='block text-sm font-medium text-white'>
+                        {item.title}
+                      </span>
+                      <span className='mt-0.5 block text-sm text-white/60'>
+                        {item.description}
+                      </span>
+                    </label>
+                    <input
+                      type='checkbox'
+                      checked={preferences[item.key]}
+                      disabled={item.disabled}
+                      onChange={(e) =>
+                        setPreferences((prev) => ({
+                          ...prev,
+                          [item.key]: e.target.checked,
+                        }))
+                      }
+                      className='h-5 w-5 rounded border-white/20 bg-white/5 text-blue-500 focus:ring-2 focus:ring-blue-500 focus:ring-offset-2 focus:ring-offset-black'
+                    />
+                  </div>
+                ))}
               </div>
 
-              <div className='flex justify-end gap-2 pt-4'>
+              <div className='flex justify-end gap-2'>
                 <motion.button
                   onClick={() => setShowPreferences(false)}
-                  className='inline-flex h-[22px] items-center justify-center gap-2.5 rounded-full bg-black px-2 py-1 hover:bg-[#303036]'
+                  className='group relative inline-flex h-9 items-center justify-center gap-2 rounded-full border border-white/10 px-4 transition-all hover:bg-white/5'
+                  whileHover={{ scale: 1.02 }}
+                  whileTap={{ scale: 0.98 }}
                 >
-                  <span className='font-oracle text-xs font-normal uppercase leading-[14.40px] tracking-wide text-white'>
-                    CANCEL
+                  <span className='text-sm font-medium text-white/80'>
+                    Cancel
                   </span>
                 </motion.button>
                 <motion.button
                   onClick={handleSavePreferences}
-                  className='inline-flex h-[22px] items-center justify-center gap-2.5 rounded-full bg-white px-2 py-1 hover:bg-[#E9E9E9]'
+                  className='group relative inline-flex h-9 items-center justify-center gap-2 rounded-full bg-white/10 px-4 backdrop-blur-sm transition-all hover:bg-white/20'
+                  whileHover={{ scale: 1.02 }}
+                  whileTap={{ scale: 0.98 }}
                 >
-                  <span className='font-oracle text-xs font-normal uppercase leading-[14.40px] tracking-wide text-zinc-900'>
-                    SAVE PREFERENCES
+                  <span className='text-sm font-medium text-white'>
+                    Save Preferences
                   </span>
                 </motion.button>
               </div>
