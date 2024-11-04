@@ -23,27 +23,41 @@ const AaruIcon: React.FC<SvgKpProps> = ({
     {...props}
   >
     {/* Cell-like circular structure */}
-    <circle cx="200" cy="300" r="120" stroke={color} strokeWidth="16" fill="none" />
-    <circle cx="200" cy="300" r="75" stroke={color} strokeWidth="12" fill="none" />
-    
+    <circle
+      cx='200'
+      cy='300'
+      r='120'
+      stroke={color}
+      strokeWidth='16'
+      fill='none'
+    />
+    <circle
+      cx='200'
+      cy='300'
+      r='75'
+      stroke={color}
+      strokeWidth='12'
+      fill='none'
+    />
+
     {/* Small organelle-like circles */}
-    <circle cx="155" cy="255" r="24" fill={color} />
-    <circle cx="245" cy="345" r="18" fill={color} />
-    <circle cx="185" cy="360" r="15" fill={color} />
-    <circle cx="230" cy="270" r="20" fill={color} />
-    
+    <circle cx='155' cy='255' r='24' fill={color} />
+    <circle cx='245' cy='345' r='18' fill={color} />
+    <circle cx='185' cy='360' r='15' fill={color} />
+    <circle cx='230' cy='270' r='20' fill={color} />
+
     {/* Text */}
     <text
-      x="380"
-      y="280"
+      x='380'
+      y='280'
       fill={color}
       style={{ fontFamily: 'Arial', fontSize: '96px', fontWeight: 'bold' }}
     >
       Virtual
     </text>
     <text
-      x="380"
-      y="400"
+      x='380'
+      y='400'
       fill={color}
       style={{ fontFamily: 'Arial', fontSize: '96px', fontWeight: 'bold' }}
     >
