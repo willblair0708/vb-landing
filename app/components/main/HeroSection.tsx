@@ -267,64 +267,72 @@ export default function HeroSection({ id, isMobile }: HeroSectionProps) {
       animate={{ opacity: 1 }}
       transition={{ duration: 1 }}
     >
-      <motion.div
-        className='absolute inset-0 z-0'
-        initial={{ opacity: 0 }}
-        animate={{ opacity: 1 }}
-        transition={{ duration: 1 }}
-      >
+      <motion.div className='absolute inset-0 z-0'>
+        <div className='absolute inset-0 bg-gradient-to-b from-black via-black/95 to-black/90' />
+        <div className='absolute inset-0 bg-[url("/assets/patterns/grid.svg")] opacity-[0.02]' />
+        <div className='absolute inset-0 bg-[url("/assets/patterns/dna.svg")] opacity-[0.03]' />
+
+        <div className='bg-gradient-conic absolute inset-0 animate-spin-slow from-white/5 via-transparent to-transparent opacity-20' />
+
+        <div className='relative h-full'>
+          {!isLowBandwidth && !videoError ? (
+            <video
+              ref={videoRef}
+              className='h-full w-full object-cover'
+              loop
+              muted
+              playsInline
+              disablePictureInPicture
+              poster='/assets/main/cell_simulation_poster.webp'
+              style={{
+                willChange: 'transform',
+                transform: 'translate3d(0, 0, 0)',
+                opacity: 0.4,
+              }}
+            >
+              <source
+                src='/assets/main/cell_simulation.webm'
+                type='video/webm'
+              />
+              <source src='/assets/main/cell_simulation.mp4' type='video/mp4' />
+            </video>
+          ) : (
+            <img
+              src='/assets/main/virtual.jpg'
+              alt='AI-powered cell simulation visualization'
+              className='h-full w-full object-cover opacity-40'
+            />
+          )}
+        </div>
+
         <canvas
           ref={canvasRef}
-          className='absolute inset-0 z-0'
-          style={{ mixBlendMode: 'screen' }}
+          className='absolute inset-0 z-10'
+          style={{ mixBlendMode: 'screen', opacity: 0.3 }}
         />
-        {!isLowBandwidth && !videoError ? (
-          <video
-            ref={videoRef}
-            className='h-full w-full object-cover'
-            loop
-            muted
-            playsInline
-            disablePictureInPicture
-            poster='/assets/main/cell_simulation_poster.webp'
-            style={{
-              willChange: 'transform',
-              transform: 'translate3d(0, 0, 0)',
-              opacity: 0.6,
-            }}
-          >
-            <source src='/assets/main/cell_simulation.webm' type='video/webm' />
-            <source src='/assets/main/cell_simulation.mp4' type='video/mp4' />
-            Your browser does not support the video tag.
-          </video>
-        ) : (
-          <img
-            src='/assets/main/virtual.jpg'
-            alt='AI-powered cell simulation visualization'
-            className='h-full w-full object-cover opacity-60'
-          />
-        )}
-        <div className='absolute inset-0 bg-gradient-to-b from-black/90 via-black/70 to-black/50' />
-        <div className='absolute inset-0 bg-[url("/assets/patterns/dna.svg")] opacity-5' />
       </motion.div>
 
       <div className='relative z-20 flex h-full flex-col'>
         <Navbar isFixed={false} />
+
         <motion.div
-          className={`mr-auto flex max-w-7xl flex-grow items-center px-4 sm:px-6 sm:pt-0 lg:px-8 ${
+          className={`relative mx-auto flex max-w-7xl flex-grow flex-col justify-center px-4 sm:px-6 lg:px-8 ${
             isMobile ? 'mt-[-60px]' : ''
           }`}
           style={{ opacity, scale }}
         >
-          <div className='w-full max-w-4xl'>
+          <div className='max-w-4xl'>
             <motion.div
               variants={fadeInVariants}
               initial='hidden'
               animate={isInView ? 'visible' : 'hidden'}
-              className='mb-8 inline-flex items-center gap-2 rounded-full border border-white/10 bg-white/5 px-4 py-2 backdrop-blur-sm'
+              className='mb-8 inline-flex items-center gap-2 rounded-full border border-white/10 bg-white/[0.03] px-4 py-2 backdrop-blur-sm'
             >
-              <div className='h-2 w-2 animate-pulse rounded-full bg-white'></div>
-              <span className='text-sm font-medium text-white'>
+              <div className='relative h-2 w-2'>
+                <div className='absolute h-full w-full animate-ping rounded-full bg-white/50'></div>
+                <div className='relative h-full w-full rounded-full bg-white'></div>
+              </div>
+              <span className='text-sm font-medium text-white/90'>
                 Next-Gen Drug Discovery Platform
               </span>
             </motion.div>
@@ -333,11 +341,14 @@ export default function HeroSection({ id, isMobile }: HeroSectionProps) {
               variants={fadeInVariants}
               initial='hidden'
               animate={isInView ? 'visible' : 'hidden'}
-              className='mb-6 font-book text-[42px] leading-tight tracking-tight text-white sm:text-[56px] lg:text-[64px]'
+              className='mb-6 font-book text-[42px] leading-tight tracking-tight sm:text-[56px] lg:text-[64px]'
             >
-              <span className='text-white'>AI-Powered</span> Virtual Cell Models
+              <span className='text-white'>AI-Powered</span>{' '}
+              <span className='bg-gradient-to-r from-white via-white/90 to-white/80 bg-clip-text text-transparent'>
+                Virtual Cell Models
+              </span>
               <br />
-              <span className='bg-gradient-to-r from-white to-white/80 bg-clip-text text-transparent'>
+              <span className='bg-gradient-to-r from-white/90 to-white/70 bg-clip-text text-transparent'>
                 Revolutionizing Drug Discovery
               </span>
             </motion.h1>
@@ -346,7 +357,7 @@ export default function HeroSection({ id, isMobile }: HeroSectionProps) {
               variants={slideInVariants}
               initial='hidden'
               animate={isInView ? 'visible' : 'hidden'}
-              className='mb-8 max-w-2xl text-lg text-neutral-300 sm:text-xl'
+              className='mb-8 max-w-2xl text-lg leading-relaxed text-neutral-300/90 sm:text-xl'
             >
               Leveraging genomic sequences and comparative genomics to predict
               gene expression and cell types directly from DNA, bypassing
@@ -361,25 +372,25 @@ export default function HeroSection({ id, isMobile }: HeroSectionProps) {
             >
               <Link
                 href='/platform'
-                className='group relative overflow-hidden rounded-md bg-white px-6 py-3 text-sm font-semibold text-black transition-transform hover:scale-[1.02]'
+                className='group relative overflow-hidden rounded-md bg-white px-6 py-3 text-sm font-semibold text-black transition-all duration-300 hover:scale-[1.02] hover:shadow-lg hover:shadow-white/10'
               >
-                <div className='absolute inset-0 bg-gradient-to-r from-white/0 via-white/50 to-white/0 transition-transform group-hover:translate-x-full' />
+                <div className='absolute inset-0 -translate-x-full bg-gradient-to-r from-white/0 via-white/50 to-white/0 transition-transform duration-500 group-hover:translate-x-full' />
                 Explore Our Platform
               </Link>
               <Link
                 href='/pdfs/whitepaper.pdf'
-                className='group relative overflow-hidden rounded-md border border-white/20 bg-white/5 px-6 py-3 text-sm font-semibold text-white backdrop-blur-sm transition-colors hover:bg-white/10'
+                className='group relative overflow-hidden rounded-md border border-white/10 bg-white/[0.02] px-6 py-3 text-sm font-semibold text-white backdrop-blur-sm transition-all duration-300 hover:border-white/20 hover:bg-white/[0.04] hover:shadow-lg hover:shadow-white/5'
                 target='_blank'
                 rel='noopener noreferrer'
               >
-                <div className='absolute inset-0 bg-gradient-to-r from-white/0 via-white/10 to-white/0 transition-transform group-hover:translate-x-full' />
+                <div className='absolute inset-0 -translate-x-full bg-gradient-to-r from-white/0 via-white/10 to-white/0 transition-transform duration-500 group-hover:translate-x-full' />
                 Read Whitepaper
               </Link>
               <Link
                 href='/contact'
-                className='group relative overflow-hidden rounded-md border border-white/20 bg-white/5 px-6 py-3 text-sm font-semibold text-white backdrop-blur-sm transition-colors hover:bg-white/10'
+                className='group relative overflow-hidden rounded-md border border-white/10 bg-white/[0.02] px-6 py-3 text-sm font-semibold text-white backdrop-blur-sm transition-all duration-300 hover:border-white/20 hover:bg-white/[0.04] hover:shadow-lg hover:shadow-white/5'
               >
-                <div className='absolute inset-0 bg-gradient-to-r from-white/0 via-white/10 to-white/0 transition-transform group-hover:translate-x-full' />
+                <div className='absolute inset-0 -translate-x-full bg-gradient-to-r from-white/0 via-white/10 to-white/0 transition-transform duration-500 group-hover:translate-x-full' />
                 Contact Us
               </Link>
             </motion.div>
@@ -392,13 +403,13 @@ export default function HeroSection({ id, isMobile }: HeroSectionProps) {
           animate={isInView ? 'visible' : 'hidden'}
           className={`absolute ${
             isMobile ? 'bottom-[30px]' : 'bottom-[60px]'
-          } right-[30px] flex w-[300px] flex-col items-start space-y-4 border-t border-white/20 sm:bottom-20 sm:right-24`}
+          } right-[30px] flex w-[300px] flex-col items-start space-y-4 border-t border-white/10 sm:bottom-20 sm:right-24`}
         >
           <div className='flex flex-col items-start py-3'>
-            <p className='mb-4 font-book text-sm uppercase tracking-wider text-white/60'>
+            <p className='mb-4 font-book text-sm uppercase tracking-wider text-white/50'>
               Our Impact
             </p>
-            <p className='font-book text-lg leading-snug tracking-tight text-white'>
+            <p className='font-book text-lg leading-snug tracking-tight text-white/90'>
               Enabling accurate in silico simulations of genetic and
               pharmacological perturbations
             </p>

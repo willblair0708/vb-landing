@@ -10,9 +10,9 @@ import MobileMenu from './MobileMenu';
 
 const navItems = [
   { text: 'Home', href: '/' },
-  { text: 'Products', href: '/products' },
+  { text: 'Platform', href: '/platform' },
   { text: 'About', href: '/about' },
-  { text: '2024 Election Model', href: '/model' },
+  { text: 'Model Demo', href: '/model' },
 ] as const;
 
 const navItemVariants = {

@@ -24,7 +24,6 @@ interface HeroSectionProps {
   isMobile: boolean;
 }
 
-// Move form fields outside component to prevent recreation on each render
 const formFields = [
   {
     id: 'firstName',
@@ -48,13 +47,6 @@ const formFields = [
     width: 'half',
   },
   {
-    id: 'jobTitle',
-    label: 'JOB TITLE',
-    placeholder: 'Job Title',
-    type: 'text',
-    width: 'half',
-  },
-  {
     id: 'organization',
     label: 'ORGANIZATION',
     placeholder: 'Organization',
@@ -62,22 +54,28 @@ const formFields = [
     width: 'half',
   },
   {
+    id: 'researchArea',
+    label: 'RESEARCH AREA',
+    placeholder: 'e.g. Drug Discovery, Cell Biology',
+    type: 'text',
+    width: 'half',
+  },
+  {
     id: 'message',
     label: 'MESSAGE',
-    placeholder: 'Your Message',
+    placeholder:
+      'Please describe your research goals and how our virtual cell models could help accelerate your work',
     type: 'textarea',
     width: 'full',
   },
 ] as const;
 
-// Move form field rows outside component
 const formFieldRows = [
   ['firstName', 'lastName'],
-  ['email', 'jobTitle'],
-  ['organization'],
+  ['email', 'organization'],
+  ['researchArea'],
 ] as const;
 
-// Move variants outside component to prevent recreation
 const containerVariants = {
   initial: { opacity: 0, y: 20 },
   animate: {
@@ -102,7 +100,6 @@ const itemVariants = {
   },
 } as const;
 
-// Add these variants near the top with other variants
 const inputVariants = {
   initial: { y: 0 },
 } as const;
@@ -125,7 +122,6 @@ const labelVariants = {
   },
 } as const;
 
-// Add this type declaration at the top of the file, after the imports
 declare global {
   interface Window {
     grecaptcha: {
@@ -213,8 +209,8 @@ const formSchema = z.object({
   firstName: z.string().min(1),
   lastName: z.string().min(1),
   email: z.string().email(),
-  jobTitle: z.string().min(3),
   organization: z.string().min(2),
+  researchArea: z.string().min(2),
   message: z.string().min(50),
 });
 
@@ -250,14 +246,15 @@ export default function HeroSection({
             }),
           });
 
-          // Log response for debugging
           console.log('Form submission response:', {
             status: response.status,
             statusText: response.statusText,
           });
 
           if (response.ok) {
-            toast.success('Message sent! We will get back to you soon.');
+            toast.success(
+              'Message sent! Our team will contact you shortly to discuss your research needs.'
+            );
             form.reset();
           } else {
             const errorText = await response.text();
@@ -319,9 +316,9 @@ export default function HeroSection({
             isMobile ? 'mt-24 text-[36px]' : 'mt-[30vh] text-[42px]'
           } max-w-2xl font-book leading-[1.2] tracking-[-0.01em]`}
         >
-          See The Future,
+          Revolutionizing Drug Discovery
           <br />
-          Change The Present
+          Through AI-Powered Virtual Cell Models
         </motion.h1>
 
         <div
@@ -337,14 +334,13 @@ export default function HeroSection({
             animate='animate'
             className='mb-[30px] font-book text-lg tracking-tight sm:mb-[50px] sm:text-[24px]'
           >
-            Contact / Request a Demo
+            Request a Demo / Research Collaboration
           </motion.p>
 
           <form
             onSubmit={form.handleSubmit(onSubmit)}
             className='relative flex w-full flex-col items-start gap-[50px]'
           >
-            {/* honey pot */}
             <input type='hidden' name='_gotcha' className='hidden' />
             {formFieldRows.map((row) => (
               <div
@@ -402,8 +398,8 @@ export default function HeroSection({
                     />
                   </svg>
                   <p className='text-sm text-white opacity-80'>
-                    Please tell us about your project so we can connect you with
-                    the right team.
+                    Tell us about your research goals and how our virtual cell
+                    models could accelerate your work.
                   </p>
                 </div>
 
@@ -450,7 +446,7 @@ export default function HeroSection({
               whileTap={{ scale: isSubmitting ? 1 : 0.98 }}
             >
               <span className='relative mt-[-1.00px] w-fit whitespace-nowrap text-xs font-normal leading-[13.2px] tracking-[0.96px] text-white'>
-                {isSubmitting ? 'SENDING...' : 'SUBMIT'}
+                {isSubmitting ? 'SENDING...' : 'REQUEST DEMO'}
               </span>
               {!isSubmitting && (
                 <ArrowIcon
