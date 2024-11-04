@@ -99,10 +99,10 @@ const JobDetailsPage = () => {
                       <p className='text-white/80'>
                         Send your CV and introduction to{' '}
                         <a
-                          href='mailto:jobs@aaruaaru.com'
+                          href='mailto:jobs@virtualbio.com'
                           className='text-white underline'
                         >
-                          jobs@aaruaaru.com
+                          jobs@virtualbio.com
                         </a>
                       </p>
                     </motion.div>

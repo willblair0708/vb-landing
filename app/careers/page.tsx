@@ -123,10 +123,10 @@ const CareersPage = () => {
                   <span className='text-white/50'>
                     Get in touch:{' '}
                     <Link
-                      href='mailto:jobs@aaru.com'
+                      href='mailto:jobs@virtualbio .com'
                       className='text-white hover:underline'
                     >
-                      jobs@aaru.com
+                      jobs@virtualbio.com
                     </Link>
                   </span>
                 </motion.div>
