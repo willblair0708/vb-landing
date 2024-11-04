@@ -143,8 +143,8 @@ function StepVisualization({ step }: { step: string }) {
   switch (step) {
     case 'genome':
       return (
-        <div className='relative h-full w-full p-8 font-mono'>
-          {/* DNA Sequence Grid - Exact match from image */}
+        <div className='relative h-full w-full bg-zinc-950 p-8 font-mono'>
+          {/* DNA Sequence Grid - Exact scientific representation */}
           <div className='grid gap-2'>
             <motion.div
               className='whitespace-pre text-sm tracking-wider'
@@ -153,35 +153,112 @@ function StepVisualization({ step }: { step: string }) {
             >
               <span className='text-neutral-400'>GGACGATTTCAG</span>
               <br />
-              <span className='text-neutral-400'>ACGTGCAGACTGA</span>
+              <motion.span
+                className='text-blue-500'
+                animate={{ opacity: [0.4, 1, 0.4] }}
+                transition={{ duration: 2, repeat: Infinity }}
+              >
+                ACGTGCAGACTGA
+              </motion.span>
               <br />
               <span className='text-neutral-400'>CGTGACGTACGTC</span>
               <br />
-              <span className='text-neutral-400'>TAATTAACAGGAA</span>
-              <br />
-              <span className='text-neutral-400'>...</span>
+              <motion.span
+                className='text-red-500'
+                animate={{ opacity: [0.4, 1, 0.4] }}
+                transition={{ duration: 2, repeat: Infinity, delay: 1 }}
+              >
+                TAATTAACAGGAA
+              </motion.span>
             </motion.div>
           </div>
+          {/* DNA Double Helix Background */}
+          <motion.div
+            className='absolute inset-0 opacity-10'
+            style={{
+              backgroundImage: 'url("/assets/patterns/dna-helix.svg")',
+              backgroundSize: '200px',
+              backgroundRepeat: 'repeat',
+            }}
+            animate={{
+              backgroundPositionY: ['0%', '100%'],
+            }}
+            transition={{
+              duration: 20,
+              repeat: Infinity,
+              ease: 'linear',
+            }}
+          />
         </div>
       );
 
     case 'motif':
       return (
-        <div className='relative h-full w-full p-8'>
+        <div className='relative h-full w-full bg-zinc-950 p-8'>
           <div className='space-y-4'>
             <div className='font-mono text-sm'>
-              {/* Exact motif highlighting from image */}
-              <motion.div className='mb-4'>
-                <span className='text-neutral-400'>GGACGATTTCAG</span>
-                <br />
-                <span className='text-neutral-400'>AC</span>
-                <span className='font-bold text-blue-500'>GTGCAG</span>
-                <span className='text-neutral-400'>ACTGA</span>
-                <br />
-                <span className='text-neutral-400'>CGTGACGTACGTC</span>
-                <br />
-                <span className='font-bold text-red-500'>TAATAA</span>
-                <span className='text-neutral-400'>TCAGGAA</span>
+              {/* Motif Discovery with Scientific Accuracy */}
+              <motion.div
+                className='mb-4 space-y-2'
+                initial={{ opacity: 0 }}
+                animate={{ opacity: 1 }}
+              >
+                {/* Original sequence with highlighted motifs */}
+                <div className='relative'>
+                  <span className='text-neutral-400'>GGACGATTTCAG</span>
+                  <motion.div
+                    className='absolute -top-4 left-0 text-xs text-blue-400'
+                    initial={{ opacity: 0 }}
+                    animate={{ opacity: 1 }}
+                    transition={{ delay: 0.5 }}
+                  >
+                    Motif 1
+                  </motion.div>
+                </div>
+                <div className='relative'>
+                  <span className='text-neutral-400'>AC</span>
+                  <motion.span
+                    className='font-bold text-blue-500'
+                    animate={{
+                      backgroundColor: [
+                        'rgba(59,130,246,0)',
+                        'rgba(59,130,246,0.2)',
+                        'rgba(59,130,246,0)',
+                      ],
+                    }}
+                    transition={{ duration: 2, repeat: Infinity }}
+                  >
+                    GTGCAG
+                  </motion.span>
+                  <span className='text-neutral-400'>ACTGA</span>
+                </div>
+                <div className='relative'>
+                  <span className='text-neutral-400'>CGTGACGTACGTC</span>
+                </div>
+                <div className='relative'>
+                  <motion.span
+                    className='font-bold text-red-500'
+                    animate={{
+                      backgroundColor: [
+                        'rgba(239,68,68,0)',
+                        'rgba(239,68,68,0.2)',
+                        'rgba(239,68,68,0)',
+                      ],
+                    }}
+                    transition={{ duration: 2, repeat: Infinity, delay: 1 }}
+                  >
+                    TAATAA
+                  </motion.span>
+                  <span className='text-neutral-400'>TCAGGAA</span>
+                  <motion.div
+                    className='absolute -top-4 left-0 text-xs text-red-400'
+                    initial={{ opacity: 0 }}
+                    animate={{ opacity: 1 }}
+                    transition={{ delay: 1 }}
+                  >
+                    miRNA Target
+                  </motion.div>
+                </div>
               </motion.div>
             </div>
           </div>
@@ -190,43 +267,67 @@ function StepVisualization({ step }: { step: string }) {
 
     case 'network':
       return (
-        <div className='relative h-full w-full'>
+        <div className='relative h-full w-full bg-zinc-950'>
           <svg className='h-full w-full'>
-            {/* Gene Regulatory Network - Matching diagram style */}
+            <defs>
+              <marker
+                id='arrowhead'
+                markerWidth='10'
+                markerHeight='7'
+                refX='9'
+                refY='3.5'
+                orient='auto'
+              >
+                <polygon points='0 0, 10 3.5, 0 7' fill='#475569' />
+              </marker>
+            </defs>
             <g>
-              {/* Create exact network pattern from image */}
+              {/* Exact network pattern from diagram */}
               {[
-                { x: 100, y: 100 },
-                { x: 200, y: 100 },
-                { x: 150, y: 180 },
-                { x: 100, y: 260 },
-                { x: 200, y: 260 },
+                { x: 100, y: 100, connections: [1, 2] },
+                { x: 200, y: 100, connections: [2] },
+                { x: 150, y: 180, connections: [3, 4] },
+                { x: 100, y: 260, connections: [4] },
+                { x: 200, y: 260, connections: [] },
               ].map((node, i) => (
                 <g key={i}>
-                  <circle
+                  <motion.circle
                     cx={node.x}
                     cy={node.y}
                     r={15}
                     fill='#1E293B'
                     stroke='#475569'
+                    initial={{ r: 0 }}
+                    animate={{ r: 15 }}
+                    transition={{ delay: i * 0.2 }}
                   />
-                  {/* Add connections matching the diagram */}
-                  {i < 4 && (
-                    <path
+                  {node.connections.map((target, j) => (
+                    <motion.path
+                      key={`${i}-${j}`}
                       d={`M ${node.x} ${node.y} L ${
-                        i === 0
-                          ? '200 100'
-                          : i === 1
-                            ? '150 180'
-                            : i === 2
-                              ? '100 260'
-                              : '200 260'
+                        [
+                          { x: 200, y: 100 },
+                          { x: 150, y: 180 },
+                          { x: 100, y: 260 },
+                          { x: 200, y: 260 },
+                        ][target - 1].x
+                      } ${
+                        [
+                          { x: 200, y: 100 },
+                          { x: 150, y: 180 },
+                          { x: 100, y: 260 },
+                          { x: 200, y: 260 },
+                        ][target - 1].y
                       }`}
                       stroke='#475569'
                       strokeWidth={2}
                       fill='none'
+                      markerEnd='url(#arrowhead)'
+                      initial={{ pathLength: 0, opacity: 0 }}
+                      animate={{ pathLength: 1, opacity: 1 }}
+                      transition={{ delay: i * 0.2 + 0.2, duration: 1 }}
                     />
-                  )}
+                  ))}
                 </g>
               ))}
             </g>
