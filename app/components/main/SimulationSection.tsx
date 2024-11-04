@@ -196,6 +196,239 @@ const generateProteinStructure = () => ({
   })),
 });
 
+// Add these sophisticated biophysics helper functions
+const generateProteinDynamics = () => ({
+  backbone: {
+    path: 'M 100 200 C 150 150, 200 250, 300 200 S 400 150, 500 200',
+    secondaryStructures: [
+      { type: 'helix', start: 0.2, end: 0.4, pitch: 5.4, residuesPerTurn: 3.6 },
+      {
+        type: 'sheet',
+        start: 0.6,
+        end: 0.8,
+        pleatWidth: 8,
+        hydrogenBonds: true,
+      },
+      { type: 'loop', start: 0.4, end: 0.6, flexibility: 0.8 },
+    ],
+    bondAngles: {
+      phiPsi: [-60, -45], // Ramachandran-valid angles
+      omega: 180, // Trans peptide bond
+    },
+  },
+  residues: Array.from({ length: 20 }).map((_, i) => ({
+    position: i,
+    type: ['hydrophobic', 'polar', 'charged', 'special'][
+      Math.floor(Math.random() * 4)
+    ],
+    sideChainLength: Math.random() * 15 + 5,
+    charge: Math.random() > 0.7 ? (Math.random() > 0.5 ? 1 : -1) : 0,
+    hydrophobicity: Math.random(),
+    rotamerState: Math.floor(Math.random() * 3),
+  })),
+  solventAccessibility: Array(20)
+    .fill(0)
+    .map(() => Math.random()),
+  interactions: {
+    hydrophobic: generateHydrophobicInteractions(),
+    ionic: generateIonicBonds(),
+    hydrogenBonds: generateHydrogenBonds(),
+  },
+});
+
+// Add these helper functions after the existing generators
+const generateHydrophobicInteractions = () => {
+  return Array(5)
+    .fill(0)
+    .map(() => ({
+      residue1: Math.floor(Math.random() * 20),
+      residue2: Math.floor(Math.random() * 20),
+      strength: Math.random(),
+    }));
+};
+
+const generateIonicBonds = () => {
+  return Array(3)
+    .fill(0)
+    .map(() => ({
+      positive: Math.floor(Math.random() * 20),
+      negative: Math.floor(Math.random() * 20),
+      distance: Math.random() * 10 + 5,
+    }));
+};
+
+const generateHydrogenBonds = () => {
+  return Array(8)
+    .fill(0)
+    .map(() => ({
+      donor: Math.floor(Math.random() * 20),
+      acceptor: Math.floor(Math.random() * 20),
+      angle: Math.random() * 60 - 30,
+    }));
+};
+
+const generateHelixPath = (
+  start: number,
+  end: number,
+  pitch: number,
+  residuesPerTurn: number
+) => {
+  const points = [];
+  const length = (end - start) * 20;
+  const turns = length / (pitch * residuesPerTurn);
+
+  for (let i = 0; i <= turns * 32; i++) {
+    const t = i / 32;
+    const x = 120 + start * 20 + t * length;
+    const y = 200 + Math.sin(t * Math.PI * 2) * 10;
+    const z = Math.cos(t * Math.PI * 2) * 10;
+    points.push(`${x},${y}`);
+  }
+
+  return `M ${points.join(' L ')}`;
+};
+
+const generateSheetPath = (start: number, end: number, pleatWidth: number) => {
+  const length = (end - start) * 20;
+  const pleats = Math.floor(length / pleatWidth);
+  const points = [];
+
+  for (let i = 0; i <= pleats; i++) {
+    const x = 120 + start * 20 + i * pleatWidth;
+    const y = 200 + (i % 2 ? -10 : 10);
+    points.push(`${x},${y}`);
+  }
+
+  return `M ${points.join(' L ')}`;
+};
+
+const generateHydrogenBondPaths = (sheet: {
+  start: number;
+  end: number;
+  pleatWidth: number;
+}) => {
+  const bonds = [];
+  const length = (sheet.end - sheet.start) * 20;
+  const pleats = Math.floor(length / sheet.pleatWidth);
+
+  for (let i = 0; i < pleats - 1; i++) {
+    const x1 = 120 + sheet.start * 20 + i * sheet.pleatWidth;
+    const x2 = x1 + sheet.pleatWidth / 2;
+    const y1 = 200 + (i % 2 ? -10 : 10);
+    const y2 = 200 + (i % 2 ? 10 : -10);
+    bonds.push(
+      <motion.line
+        key={`hbond-${i}`}
+        x1={x1}
+        y1={y1}
+        x2={x2}
+        y2={y2}
+        stroke='rgba(234, 179, 8, 0.4)'
+        strokeWidth={1}
+        strokeDasharray='2 2'
+        initial={{ pathLength: 0 }}
+        animate={{ pathLength: 1 }}
+        transition={{ delay: i * 0.1, duration: 1 }}
+      />
+    );
+  }
+
+  return bonds;
+};
+
+const getResidueRadius = (residue: {
+  type: string;
+  hydrophobicity: number;
+}) => {
+  const baseRadius = 6;
+  switch (residue.type) {
+    case 'hydrophobic':
+      return baseRadius * (1 + residue.hydrophobicity * 0.5);
+    case 'polar':
+      return baseRadius * 0.8;
+    case 'charged':
+      return baseRadius * 1.2;
+    case 'special':
+      return baseRadius;
+    default:
+      return baseRadius;
+  }
+};
+
+const getSideChainColor = (residue: { type: string; charge: number }) => {
+  switch (residue.type) {
+    case 'hydrophobic':
+      return 'rgba(234, 179, 8, 0.6)';
+    case 'polar':
+      return 'rgba(147, 197, 253, 0.6)';
+    case 'charged':
+      return residue.charge > 0
+        ? 'rgba(239, 68, 68, 0.6)'
+        : 'rgba(59, 130, 246, 0.6)';
+    case 'special':
+      return 'rgba(139, 92, 246, 0.6)';
+    default:
+      return 'rgba(255, 255, 255, 0.6)';
+  }
+};
+
+const renderHydrophobicInteractions = (
+  interactions: Array<{ residue1: number; residue2: number; strength: number }>
+) => {
+  return interactions.map((interaction, i) => (
+    <motion.path
+      key={`hydrophobic-${i}`}
+      d={`M ${120 + interaction.residue1 * 20} 200 Q ${120 + (interaction.residue1 + interaction.residue2) * 10} ${200 + interaction.strength * 30} ${120 + interaction.residue2 * 20} 200`}
+      stroke='rgba(234, 179, 8, 0.2)'
+      strokeWidth={2}
+      fill='none'
+      initial={{ pathLength: 0 }}
+      animate={{ pathLength: 1 }}
+      transition={{ delay: i * 0.2, duration: 1 }}
+    />
+  ));
+};
+
+const renderIonicBonds = (
+  bonds: Array<{ positive: number; negative: number; distance: number }>
+) => {
+  return bonds.map((bond, i) => (
+    <motion.line
+      key={`ionic-${i}`}
+      x1={120 + bond.positive * 20}
+      y1={200}
+      x2={120 + bond.negative * 20}
+      y2={200}
+      stroke='rgba(239, 68, 68, 0.4)'
+      strokeWidth={2}
+      strokeDasharray='4 2'
+      initial={{ pathLength: 0 }}
+      animate={{ pathLength: 1 }}
+      transition={{ delay: i * 0.2, duration: 1 }}
+    />
+  ));
+};
+
+const renderHydrogenBonds = (
+  bonds: Array<{ donor: number; acceptor: number; angle: number }>
+) => {
+  return bonds.map((bond, i) => (
+    <motion.line
+      key={`hbond-${i}`}
+      x1={120 + bond.donor * 20}
+      y1={200}
+      x2={120 + bond.acceptor * 20}
+      y2={200 + bond.angle}
+      stroke='rgba(147, 197, 253, 0.4)'
+      strokeWidth={1}
+      strokeDasharray='2 2'
+      initial={{ pathLength: 0 }}
+      animate={{ pathLength: 1 }}
+      transition={{ delay: i * 0.1, duration: 1 }}
+    />
+  ));
+};
+
 function StepVisualization({ step }: { step: string }) {
   switch (step) {
     case 'genome':
@@ -469,112 +702,193 @@ function StepVisualization({ step }: { step: string }) {
       );
 
     case 'proteins':
-      const proteinData = generateProteinStructure();
+      const proteinData = generateProteinDynamics();
       return (
         <div className='relative h-full w-full bg-zinc-950'>
           <motion.div className='absolute inset-0'>
             <svg className='h-full w-full'>
               <defs>
-                <filter id='protein-glow'>
+                {/* Enhanced protein visualization filters */}
+                <filter id='protein-glow' filterUnits='userSpaceOnUse'>
                   <feGaussianBlur stdDeviation='4' result='blur' />
                   <feComposite in='SourceGraphic' in2='blur' operator='over' />
                   <feColorMatrix
                     type='matrix'
                     values='0 0 0 0 0.917   0 0 0 0 0.701   0 0 0 0 0.031  0 0 0 1 0'
                   />
+                  <feTurbulence
+                    type='fractalNoise'
+                    baseFrequency='0.01'
+                    numOctaves='2'
+                    result='noise'
+                  />
+                  <feDisplacementMap in='SourceGraphic' in2='noise' scale='5' />
                 </filter>
-                <linearGradient id='helix-gradient' x1='0' y1='0' x2='1' y2='0'>
+
+                {/* Improved gradients for different amino acid types */}
+                <radialGradient id='hydrophobic-core'>
                   <stop
                     offset='0%'
                     stopColor='rgb(234, 179, 8)'
                     stopOpacity='0.8'
                   />
                   <stop
-                    offset='50%'
+                    offset='100%'
                     stopColor='rgb(234, 179, 8)'
-                    stopOpacity='1'
+                    stopOpacity='0.2'
+                  />
+                </radialGradient>
+                <radialGradient id='polar-core'>
+                  <stop
+                    offset='0%'
+                    stopColor='rgb(147, 197, 253)'
+                    stopOpacity='0.8'
                   />
                   <stop
                     offset='100%'
-                    stopColor='rgb(234, 179, 8)'
+                    stopColor='rgb(147, 197, 253)'
+                    stopOpacity='0.2'
+                  />
+                </radialGradient>
+                <radialGradient id='charged-core'>
+                  <stop
+                    offset='0%'
+                    stopColor='rgb(239, 68, 68)'
                     stopOpacity='0.8'
                   />
-                </linearGradient>
+                  <stop
+                    offset='100%'
+                    stopColor='rgb(239, 68, 68)'
+                    stopOpacity='0.2'
+                  />
+                </radialGradient>
               </defs>
 
-              {/* Enhanced Protein Backbone */}
+              {/* Enhanced Protein Backbone with Secondary Structure */}
               <g filter='url(#protein-glow)'>
-                <motion.path
-                  d={proteinData.backbone.path}
-                  stroke='url(#helix-gradient)'
-                  strokeWidth={4}
-                  fill='none'
-                  initial={{ pathLength: 0 }}
-                  animate={{ pathLength: 1 }}
-                  transition={{ duration: 2, ease: 'easeInOut' }}
-                />
+                {/* Alpha Helix Representation */}
+                {proteinData.backbone.secondaryStructures
+                  .filter((struct) => struct.type === 'helix')
+                  .map((helix, i) => (
+                    <motion.path
+                      key={`helix-${i}`}
+                      d={generateHelixPath(
+                        helix.start,
+                        helix.end,
+                        helix.pitch,
+                        helix.residuesPerTurn
+                      )}
+                      stroke='url(#helix-gradient)'
+                      strokeWidth={6}
+                      fill='none'
+                      initial={{ pathLength: 0 }}
+                      animate={{ pathLength: 1 }}
+                      transition={{ duration: 2, ease: 'easeInOut' }}
+                    />
+                  ))}
 
-                {/* Secondary Structure Highlights */}
-                {proteinData.backbone.secondaryStructures.map((struct, i) => (
-                  <motion.path
-                    key={i}
-                    d={proteinData.backbone.path}
-                    strokeDasharray={struct.type === 'helix' ? '8 4' : '4 4'}
-                    strokeWidth={8}
-                    stroke='rgba(234, 179, 8, 0.3)'
-                    fill='none'
-                    strokeDashoffset={-i * 10}
-                    initial={{ opacity: 0 }}
-                    animate={{
-                      opacity: 1,
-                      strokeDashoffset: [-i * 10, -i * 20],
-                    }}
-                    transition={{
-                      duration: 3,
-                      repeat: Infinity,
-                      ease: 'linear',
-                    }}
-                  />
-                ))}
+                {/* Beta Sheet Representation */}
+                {proteinData.backbone.secondaryStructures
+                  .filter((struct) => struct.type === 'sheet')
+                  .map((sheet, i) => (
+                    <g key={`sheet-${i}`}>
+                      <motion.path
+                        d={generateSheetPath(
+                          sheet.start,
+                          sheet.end,
+                          sheet.pleatWidth
+                        )}
+                        stroke='rgba(234, 179, 8, 0.6)'
+                        strokeWidth={8}
+                        fill='none'
+                        initial={{ opacity: 0 }}
+                        animate={{ opacity: 1 }}
+                      />
+                      {sheet.hydrogenBonds && generateHydrogenBondPaths(sheet)}
+                    </g>
+                  ))}
 
-                {/* Enhanced Amino Acid Residues */}
+                {/* Enhanced Amino Acid Residues with Physical Properties */}
                 {proteinData.residues.map((residue, i) => (
                   <g key={i}>
                     <motion.circle
                       cx={120 + i * 20}
                       cy={200 + Math.sin(i * 0.3) * 20}
-                      r={residue.type === 'charged' ? 10 : 8}
-                      fill={`rgba(234, 179, 8, ${
-                        residue.type === 'hydrophobic' ? 0.8 : 0.6
-                      })`}
+                      r={getResidueRadius(residue)}
+                      fill={`url(#${residue.type}-core)`}
                       initial={{ scale: 0 }}
                       animate={{
                         scale: [1, 1.2, 1],
-                        y: [0, -5, 0],
+                        y: [0, -5 * residue.hydrophobicity, 0],
                       }}
                       transition={{
                         delay: i * 0.1,
-                        duration: 2,
+                        duration: 2 + residue.hydrophobicity,
                         repeat: Infinity,
                         ease: 'easeInOut',
                       }}
                     />
-                    {/* Side Chain Representation */}
-                    <motion.line
-                      x1={120 + i * 20}
-                      y1={200 + Math.sin(i * 0.3) * 20}
-                      x2={120 + i * 20}
-                      y2={
-                        200 + Math.sin(i * 0.3) * 20 + residue.sideChainLength
-                      }
-                      stroke='rgba(234, 179, 8, 0.4)'
-                      strokeWidth={2}
-                      initial={{ pathLength: 0 }}
-                      animate={{ pathLength: 1 }}
-                      transition={{ delay: i * 0.1, duration: 1 }}
-                    />
+
+                    {/* Side Chain Dynamics */}
+                    <motion.g>
+                      <motion.line
+                        x1={120 + i * 20}
+                        y1={200 + Math.sin(i * 0.3) * 20}
+                        x2={120 + i * 20}
+                        y2={
+                          200 + Math.sin(i * 0.3) * 20 + residue.sideChainLength
+                        }
+                        stroke={getSideChainColor(residue)}
+                        strokeWidth={2}
+                        initial={{ pathLength: 0 }}
+                        animate={{
+                          pathLength: 1,
+                          rotate: [0, residue.rotamerState * 120, 0],
+                        }}
+                        transition={{
+                          delay: i * 0.1,
+                          duration: 3,
+                          repeat: Infinity,
+                        }}
+                      />
+
+                      {/* Charge Visualization */}
+                      {residue.charge !== 0 && (
+                        <motion.circle
+                          cx={120 + i * 20}
+                          cy={
+                            200 +
+                            Math.sin(i * 0.3) * 20 +
+                            residue.sideChainLength
+                          }
+                          r={4}
+                          fill={
+                            residue.charge > 0
+                              ? 'rgb(239, 68, 68)'
+                              : 'rgb(59, 130, 246)'
+                          }
+                          animate={{
+                            opacity: [0.4, 1, 0.4],
+                            scale: [1, 1.2, 1],
+                          }}
+                          transition={{
+                            duration: 2,
+                            repeat: Infinity,
+                          }}
+                        />
+                      )}
+                    </motion.g>
                   </g>
                 ))}
+
+                {/* Molecular Interactions */}
+                <g className='interactions'>
+                  {renderHydrophobicInteractions(
+                    proteinData.interactions.hydrophobic
+                  )}
+                  {renderIonicBonds(proteinData.interactions.ionic)}
+                  {renderHydrogenBonds(proteinData.interactions.hydrogenBonds)}
+                </g>
               </g>
             </svg>
           </motion.div>
