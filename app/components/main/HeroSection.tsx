@@ -1,3 +1,4 @@
+import Image from 'next/image';
 import Link from 'next/link';
 import { useEffect, useRef, useState } from 'react';
 
@@ -11,6 +12,30 @@ import {
 
 import Navbar from '../Navbar';
 
+const fadeInVariants = {
+  hidden: { opacity: 0, y: 10 },
+  visible: {
+    opacity: 1,
+    y: 0,
+    transition: {
+      duration: 0.6,
+      ease: [0.6, 0.05, 0.01, 0.9],
+    },
+  },
+};
+
+const slideInVariants = {
+  hidden: { opacity: 0, x: -20 },
+  visible: {
+    opacity: 1,
+    x: 0,
+    transition: {
+      duration: 0.6,
+      ease: [0.6, 0.05, 0.01, 0.9],
+    },
+  },
+};
+
 interface HeroSectionProps {
   id: string;
   isMobile?: boolean;
@@ -18,12 +43,7 @@ interface HeroSectionProps {
 
 export default function HeroSection({ id, isMobile }: HeroSectionProps) {
   const sectionRef = useRef<HTMLElement>(null);
-  const videoRef = useRef<HTMLVideoElement>(null);
   const canvasRef = useRef<HTMLCanvasElement>(null);
-  const [isVideoLoaded, setIsVideoLoaded] = useState(false);
-  const [isVideoPlaying, setIsVideoPlaying] = useState(false);
-  const [isLowBandwidth, setIsLowBandwidth] = useState(false);
-  const [videoError, setVideoError] = useState(false);
   const isInView = useInView(sectionRef, { once: true, amount: 0.1 });
 
   const { scrollYProgress } = useScroll({
@@ -148,116 +168,6 @@ export default function HeroSection({ id, isMobile }: HeroSectionProps) {
     return () => window.removeEventListener('resize', handleResize);
   }, []);
 
-  useEffect(() => {
-    const checkBandwidth = async () => {
-      if ('connection' in navigator) {
-        const conn = (navigator as any).connection;
-        if (
-          conn.effectiveType === '2g' ||
-          conn.effectiveType === 'slow-2g' ||
-          conn.saveData
-        ) {
-          setIsLowBandwidth(true);
-        }
-      }
-    };
-    checkBandwidth();
-  }, []);
-
-  useEffect(() => {
-    const video = videoRef.current;
-    if (!video) return;
-
-    video.playbackRate = 0.8;
-
-    const loadVideo = async () => {
-      try {
-        video.preload = isLowBandwidth ? 'metadata' : 'auto';
-
-        if (isLowBandwidth) {
-          video
-            .querySelector('source[type="video/webm"]')
-            ?.setAttribute('src', '/assets/main/main_hero_low.webm');
-          video
-            .querySelector('source[type="video/mp4"]')
-            ?.setAttribute('src', '/assets/main/main_hero_low.mp4');
-        }
-
-        await video.load();
-        setIsVideoLoaded(true);
-
-        if (document.visibilityState === 'visible') {
-          await video.play();
-          setIsVideoPlaying(true);
-        }
-      } catch (error) {
-        console.warn('Video autoplay failed:', error);
-        setVideoError(true);
-      }
-    };
-
-    const handleError = () => {
-      console.warn('Video error occurred');
-      setVideoError(true);
-    };
-
-    const handleVisibilityChange = async () => {
-      if (document.visibilityState === 'visible') {
-        try {
-          await video.play();
-          setIsVideoPlaying(true);
-        } catch (error) {
-          console.warn('Video play failed:', error);
-        }
-      } else {
-        video.pause();
-        setIsVideoPlaying(false);
-      }
-    };
-
-    const handleLoadedData = () => {
-      setIsVideoLoaded(true);
-      if (document.visibilityState === 'visible') {
-        video.play().catch(console.warn);
-      }
-    };
-
-    video.addEventListener('loadeddata', handleLoadedData);
-    video.addEventListener('error', handleError);
-    document.addEventListener('visibilitychange', handleVisibilityChange);
-    window.addEventListener('focus', handleVisibilityChange);
-
-    loadVideo();
-
-    return () => {
-      video.removeEventListener('loadeddata', handleLoadedData);
-      video.removeEventListener('error', handleError);
-      document.removeEventListener('visibilitychange', handleVisibilityChange);
-      window.removeEventListener('focus', handleVisibilityChange);
-      video.pause();
-      video.src = '';
-      video.load();
-    };
-  }, [isLowBandwidth]);
-
-  const fadeInVariants = {
-    hidden: { opacity: 0, y: 20 },
-    visible: {
-      opacity: 1,
-      y: 0,
-      transition: { duration: 0.8, ease: 'easeOut' },
-    },
-  };
-
-  const slideInVariants = {
-    hidden: { opacity: 0, x: -20 },
-    visible: {
-      opacity: 1,
-      x: 0,
-      transition: { duration: 0.8, ease: 'easeOut', delay: 0.2 },
-    },
-  };
-
   return (
     <motion.section
       ref={sectionRef}
@@ -275,34 +185,20 @@ export default function HeroSection({ id, isMobile }: HeroSectionProps) {
         <div className='bg-gradient-conic absolute inset-0 animate-spin-slow from-white/5 via-transparent to-transparent opacity-20' />
 
         <div className='relative h-full'>
-          {!isLowBandwidth && !videoError ? (
-            <video
-              ref={videoRef}
-              className='h-full w-full object-cover'
-              loop
-              muted
-              playsInline
-              disablePictureInPicture
-              poster='/assets/main/cell_simulation_poster.webp'
-              style={{
-                willChange: 'transform',
-                transform: 'translate3d(0, 0, 0)',
-                opacity: 0.4,
-              }}
-            >
-              <source
-                src='/assets/main/cell_simulation.webm'
-                type='video/webm'
-              />
-              <source src='/assets/main/cell_simulation.mp4' type='video/mp4' />
-            </video>
-          ) : (
-            <img
-              src='/assets/main/virtual.jpg'
-              alt='AI-powered cell simulation visualization'
-              className='h-full w-full object-cover opacity-40'
-            />
-          )}
+          <Image
+            src='/assets/main/virtual.webp'
+            alt='AI-powered cell simulation visualization'
+            fill
+            priority
+            quality={90}
+            className='object-cover opacity-40'
+            onError={(e) => {
+              const img = e.currentTarget as HTMLImageElement;
+              if (img.src.endsWith('webp')) {
+                img.src = '/assets/main/virtual.jpg';
+              }
+            }}
+          />
         </div>
 
         <canvas
