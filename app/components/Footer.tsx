@@ -38,7 +38,7 @@ const COMPANY_LINKS = [
 const SOCIAL_ICONS = [
   {
     name: 'linkedin',
-    href: 'https://www.linkedin.com/company/aaru-ai',
+    href: 'https://www.linkedin.com/company/virtual-biology',
     Icon: SocialIcons.LinkedInIcon,
   },
   // {
@@ -48,7 +48,7 @@ const SOCIAL_ICONS = [
   // },
   {
     name: 'twitter',
-    href: 'https://twitter.com/aaruhq',
+    href: 'https://twitter.com/virtualbiology',
     Icon: SocialIcons.TwitterIcon,
   },
   // {
