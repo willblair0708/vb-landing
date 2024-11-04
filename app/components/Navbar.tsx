@@ -4,7 +4,7 @@ import { memo, useCallback, useState } from 'react';
 
 import { AnimatePresence, motion } from 'framer-motion';
 
-import AaruIcon from '@/public/assets/ui/AaruFullIcon';
+import VBIcon from '@/public/assets/ui/VBIcon';
 
 import MobileMenu from './MobileMenu';
 
@@ -57,7 +57,7 @@ export default function Navbar({ isFixed = true }: NavbarProps) {
 const NavLogo = memo(() => (
   <motion.div variants={navItemVariants} className='flex items-center'>
     <Link href='/' scroll={false}>
-      <AaruIcon size={85.5} className='sm:size-62 mt-4 text-white' />
+      <VBIcon size={100} className='sm:size-62 text-white' />
     </Link>
   </motion.div>
 ));
