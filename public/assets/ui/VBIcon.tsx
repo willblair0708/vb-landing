@@ -7,7 +7,7 @@ interface SvgKpProps extends SVGProps<SVGSVGElement> {
   color?: string;
 }
 
-const AaruIcon: React.FC<SvgKpProps> = ({
+const VBIcon: React.FC<SvgKpProps> = ({
   size,
   className,
   color = '#fff',
@@ -66,4 +66,4 @@ const AaruIcon: React.FC<SvgKpProps> = ({
   </svg>
 );
 
-export default AaruIcon;
+export default VBIcon;

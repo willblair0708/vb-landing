@@ -204,7 +204,7 @@ export default function HeroSection({ id, isMobile }: HeroSectionProps) {
           </video>
         ) : (
           <img
-            src='/assets/main/cell_simulation_poster.webp'
+            src='/assets/main/virtual.jpg'
             alt='AI-powered cell simulation visualization'
             className='h-full w-full object-cover'
           />
