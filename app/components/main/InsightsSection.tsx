@@ -215,10 +215,11 @@ export default function InsightsSection({ id }: InsightsSectionProps) {
             </h2>
 
             <p className='mb-8 text-lg leading-relaxed text-neutral-300'>
-              Our knowledge graphs capture complex gene interactions and cellular dynamics, 
-              enabling accurate prediction of drug responses across species. By integrating 
-              regulatory motifs and protein structures, we simulate genetic perturbations 
-              without extensive experimental data.
+              Our knowledge graphs capture complex gene interactions and
+              cellular dynamics, enabling accurate prediction of drug responses
+              across species. By integrating regulatory motifs and protein
+              structures, we simulate genetic perturbations without extensive
+              experimental data.
             </p>
 
             <div className='mb-12 grid grid-cols-3 gap-4'>
@@ -247,7 +248,10 @@ export default function InsightsSection({ id }: InsightsSectionProps) {
             </div>
 
             <motion.div variants={itemVariants}>
-              <Link href='/technology' className='group flex items-center gap-2'>
+              <Link
+                href='/technology'
+                className='group flex items-center gap-2'
+              >
                 <span className='relative flex items-center gap-2'>
                   Explore Our Technology
                   <ArrowIcon

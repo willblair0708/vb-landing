@@ -1,4 +1,5 @@
 import { motion } from 'framer-motion';
+
 import { generateDNAPath } from '../main/helpers';
 
 interface DNASequenceVizProps {
@@ -23,31 +24,28 @@ interface DNASequenceVizProps {
   showProteinBinding?: boolean;
 }
 
-export function DNASequenceViz({ 
-  sequence, 
+export function DNASequenceViz({
+  sequence,
   annotations,
   height = 400,
-  width = 800
+  width = 800,
 }: DNASequenceVizProps) {
   return (
-    <div className="relative h-full w-full">
-      <svg 
-        className="h-full w-full" 
-        viewBox={`0 0 ${width} ${height}`}
-      >
+    <div className='relative h-full w-full'>
+      <svg className='h-full w-full' viewBox={`0 0 ${width} ${height}`}>
         <defs>
-          <linearGradient id="dna-gradient" x1="0%" y1="0%" x2="100%" y2="0%">
-            <stop offset="0%" stopColor="rgba(255,255,255,0.1)" />
-            <stop offset="100%" stopColor="rgba(255,255,255,0.05)" />
+          <linearGradient id='dna-gradient' x1='0%' y1='0%' x2='100%' y2='0%'>
+            <stop offset='0%' stopColor='rgba(255,255,255,0.1)' />
+            <stop offset='100%' stopColor='rgba(255,255,255,0.05)' />
           </linearGradient>
         </defs>
-        
+
         {/* DNA Double Helix */}
         <motion.path
           d={generateDNAPath()}
-          stroke="url(#dna-gradient)"
-          strokeWidth="2"
-          fill="none"
+          stroke='url(#dna-gradient)'
+          strokeWidth='2'
+          fill='none'
           initial={{ pathLength: 0 }}
           animate={{ pathLength: 1 }}
           transition={{ duration: 2 }}
@@ -71,4 +69,4 @@ export function DNASequenceViz({
       </svg>
     </div>
   );
-} 
+}

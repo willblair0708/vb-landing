@@ -1,14 +1,16 @@
-import { motion } from 'framer-motion';
 import { useMemo } from 'react';
+
+import { motion } from 'framer-motion';
+
 import { DNASequenceViz } from '../visualizations/DNASequenceViz';
 import { NetworkViz } from '../visualizations/NetworkViz';
 import {
+  generateClusterConnections,
+  generateClusteredNodes,
   generateNodes,
   generateOrganelles,
   generateProteins,
   generateRegulatedConnections,
-  generateClusteredNodes,
-  generateClusterConnections,
 } from './helpers';
 
 interface StepVisualizationProps {
@@ -19,17 +21,21 @@ export function StepVisualization({ step }: StepVisualizationProps) {
   switch (step) {
     case 'genome':
       return (
-        <div className="relative h-full w-full">
-          <DNASequenceViz 
-            sequence={Array(20).fill('GGACGATTTCAGACGTGCAGACTGACGTGACGTACGTCTAATTAACAGGAA'.split('')).flat()}
+        <div className='relative h-full w-full'>
+          <DNASequenceViz
+            sequence={Array(20)
+              .fill(
+                'GGACGATTTCAGACGTGCAGACTGACGTGACGTACGTCTAATTAACAGGAA'.split('')
+              )
+              .flat()}
             annotations={[
               {
                 start: 15,
                 end: 25,
                 color: 'rgb(59, 130, 246)',
                 label: 'TATA Box',
-                confidence: 0.95
-              }
+                confidence: 0.95,
+              },
             ]}
             showBaseLabels={true}
             showBackbone={true}
@@ -39,41 +45,56 @@ export function StepVisualization({ step }: StepVisualizationProps) {
             width={800}
           />
           {/* Modern floating annotations */}
-          <div className="absolute inset-0 pointer-events-none">
+          <div className='pointer-events-none absolute inset-0'>
             {/* Confidence score indicator */}
             <motion.div
-              className="absolute top-4 right-4 flex items-center gap-2 rounded-lg bg-blue-500/10 p-2 backdrop-blur-sm"
+              className='absolute right-4 top-4 flex items-center gap-2 rounded-lg bg-blue-500/10 p-2 backdrop-blur-sm'
               initial={{ opacity: 0, y: -20 }}
               animate={{ opacity: 1, y: 0 }}
             >
-              <div className="h-2 w-16 rounded-full bg-white/10">
-                <motion.div 
-                  className="h-full rounded-full bg-blue-500"
+              <div className='h-2 w-16 rounded-full bg-white/10'>
+                <motion.div
+                  className='h-full rounded-full bg-blue-500'
                   initial={{ width: '0%' }}
                   animate={{ width: '95%' }}
                   transition={{ duration: 1 }}
                 />
               </div>
-              <span className="text-xs text-blue-200">95% confidence</span>
+              <span className='text-xs text-blue-200'>95% confidence</span>
             </motion.div>
-            
+
             {/* Sequence features */}
-            <div className="absolute bottom-4 left-4 space-y-2">
+            <div className='absolute bottom-4 left-4 space-y-2'>
               {[
-                { label: 'GC Content', value: '52%', color: 'rgb(59, 130, 246)' },
-                { label: 'Methylation', value: '23%', color: 'rgb(236, 72, 153)' },
-                { label: 'Conservation', value: '87%', color: 'rgb(16, 185, 129)' }
+                {
+                  label: 'GC Content',
+                  value: '52%',
+                  color: 'rgb(59, 130, 246)',
+                },
+                {
+                  label: 'Methylation',
+                  value: '23%',
+                  color: 'rgb(236, 72, 153)',
+                },
+                {
+                  label: 'Conservation',
+                  value: '87%',
+                  color: 'rgb(16, 185, 129)',
+                },
               ].map((feature, i) => (
                 <motion.div
                   key={i}
-                  className="flex items-center gap-2 text-xs"
+                  className='flex items-center gap-2 text-xs'
                   initial={{ opacity: 0, x: -20 }}
                   animate={{ opacity: 1, x: 0 }}
                   transition={{ delay: i * 0.1 }}
                 >
-                  <div className="h-2 w-2 rounded-full" style={{ backgroundColor: feature.color }} />
-                  <span className="text-white/60">{feature.label}</span>
-                  <span className="font-mono text-white">{feature.value}</span>
+                  <div
+                    className='h-2 w-2 rounded-full'
+                    style={{ backgroundColor: feature.color }}
+                  />
+                  <span className='text-white/60'>{feature.label}</span>
+                  <span className='font-mono text-white'>{feature.value}</span>
                 </motion.div>
               ))}
             </div>
@@ -83,67 +104,73 @@ export function StepVisualization({ step }: StepVisualizationProps) {
 
     case 'motif':
       return (
-        <div className="relative h-full w-full">
-          <div className="absolute inset-0 flex">
+        <div className='relative h-full w-full'>
+          <div className='absolute inset-0 flex'>
             {/* Left side: DNA sequence with motifs */}
-            <div className="w-2/3">
-              <DNASequenceViz 
-                sequence={Array(20).fill('GGACGATTTCAGACGTGCAGACTGACGTGACGTACGTCTAATTAACAGGAA'.split('')).flat()}
+            <div className='w-2/3'>
+              <DNASequenceViz
+                sequence={Array(20)
+                  .fill(
+                    'GGACGATTTCAGACGTGCAGACTGACGTGACGTACGTCTAATTAACAGGAA'.split(
+                      ''
+                    )
+                  )
+                  .flat()}
                 annotations={[
-                  { 
-                    start: 20, 
-                    end: 40, 
+                  {
+                    start: 20,
+                    end: 40,
                     color: 'rgb(59, 130, 246)',
                     label: 'GTGCAG motif',
                     type: 'transcriptionFactor',
-                    conservation: 0.92
+                    conservation: 0.92,
                   },
-                  { 
-                    start: 45, 
-                    end: 65, 
+                  {
+                    start: 45,
+                    end: 65,
                     color: 'rgb(236, 72, 153)',
                     label: 'miRNA binding site',
                     type: 'miRNA',
-                    conservation: 0.88
-                  }
+                    conservation: 0.88,
+                  },
                 ]}
                 showProteinBinding={true}
                 showConservation={true}
                 showEvolutionaryHistory={true}
               />
             </div>
-            
+
             {/* Right side: 3D protein binding visualization */}
-            <div className="relative w-1/3">
+            <div className='relative w-1/3'>
               <motion.div
-                className="absolute inset-4 rounded-xl bg-gradient-to-br from-blue-500/20 via-purple-500/10 to-pink-500/20"
+                className='absolute inset-4 rounded-xl bg-gradient-to-br from-blue-500/20 via-purple-500/10 to-pink-500/20'
                 animate={{
                   rotateY: [0, 360],
-                  scale: [1, 1.1, 1]
+                  scale: [1, 1.1, 1],
                 }}
                 transition={{
                   duration: 10,
                   repeat: Infinity,
-                  ease: "linear"
+                  ease: 'linear',
                 }}
               >
                 {/* Protein binding site markers */}
                 {Array.from({ length: 5 }).map((_, i) => (
                   <motion.div
                     key={i}
-                    className="absolute h-2 w-2 rounded-full bg-white/50"
+                    className='absolute h-2 w-2 rounded-full bg-white/50'
                     style={{
                       left: `${30 + Math.sin(i * Math.PI * 0.4) * 40}%`,
                       top: `${30 + Math.cos(i * Math.PI * 0.4) * 40}%`,
                     }}
                     animate={{
                       scale: [1, 1.5, 1],
-                      opacity: [0.5, 1, 0.5]
+                      opacity: [0.5, 1, 0.5],
                     }}
                     transition={{
                       duration: 2,
                       repeat: Infinity,
-                      delay: i * 0.4
+                      delay: i * 0.4,
                     }}
                   />
                 ))}
@@ -155,8 +182,8 @@ export function StepVisualization({ step }: StepVisualizationProps) {
 
     case 'network':
       return (
-        <div className="relative h-full w-full">
-          <div className="absolute inset-0 bg-gradient-to-br from-blue-500/5 via-transparent to-purple-500/5" />
+        <div className='relative h-full w-full'>
+          <div className='absolute inset-0 bg-gradient-to-br from-blue-500/5 via-transparent to-purple-500/5' />
           <NetworkViz
             nodes={generateNodes(12)}
             connections={generateRegulatedConnections(12)}
@@ -168,26 +195,26 @@ export function StepVisualization({ step }: StepVisualizationProps) {
               transcriptionFactor: 'rgb(59, 130, 246)',
               enhancer: 'rgb(236, 72, 153)',
               promoter: 'rgb(16, 185, 129)',
-              gene: 'rgb(251, 191, 36)'
+              gene: 'rgb(251, 191, 36)',
             }}
           />
-          
+
           {/* Network statistics overlay */}
-          <div className="absolute top-4 right-4 space-y-2">
+          <div className='absolute right-4 top-4 space-y-2'>
             {[
               { label: 'Network Density', value: '0.42' },
               { label: 'Avg. Path Length', value: '2.8' },
-              { label: 'Modularity', value: '0.68' }
+              { label: 'Modularity', value: '0.68' },
             ].map((stat, i) => (
               <motion.div
                 key={i}
-                className="rounded-lg bg-white/5 px-3 py-2 backdrop-blur-sm"
+                className='rounded-lg bg-white/5 px-3 py-2 backdrop-blur-sm'
                 initial={{ opacity: 0, x: 20 }}
                 animate={{ opacity: 1, x: 0 }}
                 transition={{ delay: i * 0.1 }}
               >
-                <div className="text-xs text-white/60">{stat.label}</div>
-                <div className="font-mono text-sm text-white">{stat.value}</div>
+                <div className='text-xs text-white/60'>{stat.label}</div>
+                <div className='font-mono text-sm text-white'>{stat.value}</div>
               </motion.div>
             ))}
           </div>
@@ -196,7 +223,7 @@ export function StepVisualization({ step }: StepVisualizationProps) {
 
     case 'clusters':
       return (
-        <div className="relative h-full w-full">
+        <div className='relative h-full w-full'>
           <NetworkViz
             nodes={generateClusteredNodes(15)}
             connections={generateClusterConnections(15)}
@@ -204,38 +231,39 @@ export function StepVisualization({ step }: StepVisualizationProps) {
             clusterColors={[
               'rgb(59, 130, 246)',
               'rgb(236, 72, 153)',
-              'rgb(16, 185, 129)'
+              'rgb(16, 185, 129)',
             ]}
             showEvolutionaryScores={true}
           />
-          <div className="absolute inset-0 pointer-events-none">
-          </div>
+          <div className='pointer-events-none absolute inset-0'></div>
         </div>
       );
 
     case 'protein':
       return (
-        <div className="relative h-full w-full">
+        <div className='relative h-full w-full'>
           <NetworkViz
-            nodes={generateNodes(15).map(node => ({
+            nodes={generateNodes(15).map((node) => ({
               ...node,
               size: node.size * 1.5,
-              color: 'rgb(16, 185, 129)'
+              color: 'rgb(16, 185, 129)',
             }))}
-            connections={Array(25).fill(0).map(() => ({
-              source: { x: Math.random() * 100, y: Math.random() * 100 },
-              target: { x: Math.random() * 100, y: Math.random() * 100 },
-              strength: Math.random() * 0.4 + 0.6,
-            }))}
+            connections={Array(25)
+              .fill(0)
+              .map(() => ({
+                source: { x: Math.random() * 100, y: Math.random() * 100 },
+                target: { x: Math.random() * 100, y: Math.random() * 100 },
+                strength: Math.random() * 0.4 + 0.6,
+              }))}
           />
         </div>
       );
 
     case 'virtual-cell':
       return (
-        <div className="relative h-full w-full bg-zinc-950">
+        <div className='relative h-full w-full bg-zinc-950'>
           <motion.div
-            className="absolute inset-0 rounded-full"
+            className='absolute inset-0 rounded-full'
             style={{
               background: `
                 radial-gradient(
@@ -251,7 +279,7 @@ export function StepVisualization({ step }: StepVisualizationProps) {
             {Array.from({ length: 12 }).map((_, i) => (
               <motion.div
                 key={i}
-                className="absolute h-4 w-1.5 bg-emerald-500/20"
+                className='absolute h-4 w-1.5 bg-emerald-500/20'
                 style={{
                   left: `${50 + 35 * Math.cos((i * Math.PI) / 6)}%`,
                   top: `${50 + 35 * Math.sin((i * Math.PI) / 6)}%`,
@@ -273,7 +301,7 @@ export function StepVisualization({ step }: StepVisualizationProps) {
           {generateOrganelles(6).map((organelle, i) => (
             <motion.div
               key={i}
-              className="absolute rounded-full bg-gradient-to-br from-emerald-500/20 to-transparent"
+              className='absolute rounded-full bg-gradient-to-br from-emerald-500/20 to-transparent'
               style={{
                 left: `${organelle.x}%`,
                 top: `${organelle.y}%`,
@@ -297,7 +325,7 @@ export function StepVisualization({ step }: StepVisualizationProps) {
           {generateProteins(15).map((protein, i) => (
             <motion.div
               key={i}
-              className="absolute h-2 w-2 rounded-full bg-yellow-500/50"
+              className='absolute h-2 w-2 rounded-full bg-yellow-500/50'
               style={{
                 left: `${protein.x}%`,
                 top: `${protein.y}%`,
@@ -321,4 +349,4 @@ export function StepVisualization({ step }: StepVisualizationProps) {
     default:
       return null;
   }
-} 
+}

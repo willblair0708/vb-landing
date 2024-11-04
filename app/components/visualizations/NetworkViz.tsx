@@ -1,4 +1,5 @@
-import { motion } from "framer-motion";
+import { motion } from 'framer-motion';
+
 import { generateConnectionPath } from '../main/helpers';
 
 interface NetworkVizProps {
@@ -27,16 +28,16 @@ interface NetworkVizProps {
 
 export function NetworkViz({ nodes, connections }: NetworkVizProps) {
   return (
-    <div className="relative h-full w-full">
-      <svg className="h-full w-full">
+    <div className='relative h-full w-full'>
+      <svg className='h-full w-full'>
         {/* Connections */}
         {connections.map((connection, i) => (
           <motion.path
             key={i}
             d={generateConnectionPath(connection)}
-            stroke="rgba(255,255,255,0.1)"
+            stroke='rgba(255,255,255,0.1)'
             strokeWidth={1}
-            fill="none"
+            fill='none'
             initial={{ pathLength: 0 }}
             animate={{ pathLength: 1 }}
             transition={{ duration: 1, delay: i * 0.05 }}
@@ -60,4 +61,4 @@ export function NetworkViz({ nodes, connections }: NetworkVizProps) {
       </svg>
     </div>
   );
-} 
+}
