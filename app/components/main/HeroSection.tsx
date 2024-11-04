@@ -1,3 +1,4 @@
+import Link from 'next/link';
 import { useEffect, useRef, useState } from 'react';
 
 import {
@@ -159,6 +160,15 @@ export default function HeroSection({ id, isMobile }: HeroSectionProps) {
     },
   };
 
+  const slideInVariants = {
+    hidden: { opacity: 0, x: -20 },
+    visible: {
+      opacity: 1,
+      x: 0,
+      transition: { duration: 0.8, ease: 'easeOut', delay: 0.2 },
+    },
+  };
+
   return (
     <motion.section
       ref={sectionRef}
@@ -182,73 +192,93 @@ export default function HeroSection({ id, isMobile }: HeroSectionProps) {
             muted
             playsInline
             disablePictureInPicture
-            poster='/assets/main/main_hero_poster.webp'
+            poster='/assets/main/cell_simulation_poster.webp'
             style={{
               willChange: 'transform',
               transform: 'translate3d(0, 0, 0)',
             }}
           >
-            <source src='/assets/main/main_hero.webm' type='video/webm' />
-            <source src='/assets/main/main_hero.mp4' type='video/mp4' />
+            <source src='/assets/main/cell_simulation.webm' type='video/webm' />
+            <source src='/assets/main/cell_simulation.mp4' type='video/mp4' />
             Your browser does not support the video tag.
           </video>
         ) : (
           <img
-            src='/assets/main/main_hero_poster.webp'
-            alt='Hero background'
+            src='/assets/main/cell_simulation_poster.webp'
+            alt='AI-powered cell simulation visualization'
             className='h-full w-full object-cover'
           />
         )}
-        <div className='absolute inset-0 bg-black opacity-50'></div>
+        <div className='absolute inset-0 bg-gradient-to-b from-black/70 to-black/40'></div>
       </motion.div>
-      <motion.div
-        className='absolute inset-0 z-10'
-        style={{ y: ySpring }}
-        initial={{ backgroundPosition: '0 0' }}
-        animate={{ backgroundPosition: '100% 100%' }}
-        transition={{ duration: 20, repeat: Infinity, repeatType: 'reverse' }}
-      >
-        <div className='h-full w-full opacity-20'></div>
-      </motion.div>
+
       <div className='relative z-20 flex h-full flex-col'>
         <Navbar isFixed={false} />
         <motion.div
           className={`mr-auto flex max-w-7xl flex-grow items-center px-4 sm:px-6 sm:pt-0 lg:px-8 ${
-            isMobile ? 'mt-[-100px]' : ''
+            isMobile ? 'mt-[-60px]' : ''
           }`}
           style={{ opacity, scale }}
         >
-          <div className='w-full'>
+          <div className='w-full max-w-4xl'>
             <motion.h1
               variants={fadeInVariants}
               initial='hidden'
               animate={isInView ? 'visible' : 'hidden'}
-              className={`mb-6 font-book text-hero text-white`}
+              className='mb-6 font-book text-[42px] leading-tight tracking-tight text-white sm:text-[56px] lg:text-[64px]'
             >
-              <span className='whitespace-nowrap'>Rethinking The </span>
-              <wbr />
-              <span className='whitespace-nowrap'>Science of Prediction</span>
+              <span className='text-blue-400'>AI-Powered</span> Virtual Cell
+              Models
+              <br />
+              Revolutionizing Drug Discovery
             </motion.h1>
+            <motion.p
+              variants={slideInVariants}
+              initial='hidden'
+              animate={isInView ? 'visible' : 'hidden'}
+              className='mb-8 max-w-2xl text-lg text-gray-300 sm:text-xl'
+            >
+              Leveraging genomic sequences and comparative genomics to predict
+              gene expression and cell types directly from DNA, bypassing
+              traditional data bottlenecks.
+            </motion.p>
+            <motion.div
+              variants={fadeInVariants}
+              initial='hidden'
+              animate={isInView ? 'visible' : 'hidden'}
+              className='flex flex-wrap gap-4'
+            >
+              <Link
+                href='/platform'
+                className='rounded-md bg-blue-500 px-6 py-3 text-sm font-semibold text-white transition-colors hover:bg-blue-600'
+              >
+                Explore Our Platform
+              </Link>
+              <Link
+                href='/contact'
+                className='rounded-md border border-white/30 px-6 py-3 text-sm font-semibold text-white transition-colors hover:bg-white/10'
+              >
+                Contact Us
+              </Link>
+            </motion.div>
           </div>
         </motion.div>
+
         <motion.div
           variants={fadeInVariants}
           initial='hidden'
           animate={isInView ? 'visible' : 'hidden'}
           className={`absolute ${
             isMobile ? 'bottom-[30px]' : 'bottom-[60px]'
-          } right-[30px] flex w-[270px] flex-col items-start space-y-4 border-t border-white sm:bottom-20 sm:right-24`}
+          } right-[30px] flex w-[300px] flex-col items-start space-y-4 border-t border-white/30 sm:bottom-20 sm:right-24`}
         >
           <div className='flex flex-col items-start py-3'>
-            <p className='mb-[60px] font-book leading-tight tracking-tight text-white sm:mb-20'>
-              Rendering Human <br />
-              Granularity
+            <p className='mb-4 font-book text-sm uppercase tracking-wider text-blue-400'>
+              Our Impact
             </p>
-          </div>
-          <div>
-            <p className='text-white text-opacity-60'>
-              Aaru simulates entire populations to predict the world&apos;s
-              events. Welcome to the new age of decision dominance.
+            <p className='font-book text-lg leading-snug tracking-tight text-white'>
+              Enabling accurate in silico simulations of genetic and
+              pharmacological perturbations
             </p>
           </div>
         </motion.div>

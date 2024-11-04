@@ -113,9 +113,6 @@ function VideoPlayer() {
 
 export default function InsightsSection({ id }: InsightsSectionProps) {
   const sectionRef = useRef<HTMLElement>(null);
-  const videoRef = useRef<HTMLVideoElement>(null);
-  const [isVideoLoaded, setIsVideoLoaded] = useState(false);
-  const [isVideoPlaying, setIsVideoPlaying] = useState(false);
   const isInView = useInView(sectionRef, { once: false, amount: 0.3 });
 
   const { scrollYProgress } = useScroll({
@@ -124,42 +121,9 @@ export default function InsightsSection({ id }: InsightsSectionProps) {
   });
 
   const opacity = useTransform(scrollYProgress, [0, 0.2, 0.8, 1], [0, 1, 1, 0]);
-
-  useEffect(() => {
-    const video = videoRef.current;
-    if (!video) return;
-
-    const handleLoadedMetadata = () => {
-      setIsVideoLoaded(true);
-      video.play().catch(() => {
-        // Autoplay was prevented, we'll need user interaction to play
-      });
-    };
-
-    const handlePlaying = () => {
-      setIsVideoPlaying(true);
-    };
-
-    const handleWaiting = () => {
-      setIsVideoPlaying(false);
-    };
-
-    video.addEventListener('loadedmetadata', handleLoadedMetadata);
-    video.addEventListener('playing', handlePlaying);
-    video.addEventListener('waiting', handleWaiting);
-
-    // Attempt to load the video
-    video.load();
-
-    return () => {
-      video.removeEventListener('loadedmetadata', handleLoadedMetadata);
-      video.removeEventListener('playing', handlePlaying);
-      video.removeEventListener('waiting', handleWaiting);
-    };
-  }, []);
+  const scale = useTransform(scrollYProgress, [0, 0.5, 1], [0.98, 1, 0.98]);
 
   const containerVariants = {
-    // hidden: { opacity: 0 },
     visible: {
       opacity: 1,
       transition: {
@@ -170,7 +134,7 @@ export default function InsightsSection({ id }: InsightsSectionProps) {
   };
 
   const itemVariants = {
-    // hidden: { opacity: 0, y: 20 },
+    hidden: { opacity: 0, y: 20 },
     visible: {
       opacity: 1,
       y: 0,
@@ -185,62 +149,101 @@ export default function InsightsSection({ id }: InsightsSectionProps) {
     <motion.section
       ref={sectionRef}
       id={id}
-      className='relative flex min-h-screen flex-col-reverse items-center overflow-hidden bg-[#BABABA] lg:flex-row'
+      className='relative flex min-h-screen flex-col-reverse items-center overflow-hidden bg-black lg:flex-row'
       initial={{ opacity: 0 }}
       animate={{ opacity: 1 }}
       transition={{ duration: 1 }}
     >
       <motion.div
-        className='z-0 h-[28rem] sm:h-[36rem] lg:h-[60rem] lg:w-full'
-        initial={{ opacity: 0 }}
-        animate={{ opacity: 1 }}
-        transition={{ duration: 0.5 }}
+        className='relative z-0 h-[28rem] w-full sm:h-[36rem] lg:h-screen lg:w-3/5'
+        style={{ scale, opacity }}
       >
-        <Suspense
-          fallback={
-            <img
-              src='/assets/main/running_poster.webp'
-              alt='Running visualization'
-              className='h-full w-full object-cover object-top'
-              loading='lazy'
-            />
-          }
-        >
-          <VideoPlayer />
-        </Suspense>
+        {/* Cell simulation overlay */}
+        <div className='bg-cell-pattern absolute inset-0 opacity-10' />
+
+        {/* Gradient overlays */}
+        <div className='absolute inset-0 bg-gradient-to-t from-black via-black/50 to-transparent' />
+        <div className='absolute inset-0 bg-gradient-to-r from-black via-transparent to-black lg:hidden' />
+
+        {/* Video container */}
+        <div className='relative h-full'>
+          <div className='absolute inset-0 bg-white/5 mix-blend-overlay' />
+          <Suspense
+            fallback={
+              <div className='h-full w-full animate-pulse bg-neutral-900' />
+            }
+          >
+            <VideoPlayer />
+          </Suspense>
+        </div>
+
+        {/* Cell simulation particles */}
+        <div className='absolute inset-0 overflow-hidden'>
+          <div className='cell-particles' />
+        </div>
       </motion.div>
 
-      <div className='relative z-10 mt-8 flex w-full items-center bg-[#BABABA] px-8 py-6 sm:px-6 sm:py-8 lg:ml-auto lg:mt-0 lg:px-8 lg:py-0'>
+      <div className='relative z-10 flex w-full items-center px-8 py-16 lg:w-2/5 lg:px-16 lg:py-0'>
         <motion.div
           variants={containerVariants}
           initial='hidden'
           animate={isInView ? 'visible' : 'hidden'}
-          className='max-w-[454px]'
+          className='mx-auto max-w-[500px]'
         >
           <motion.div variants={itemVariants} className='text-left'>
-            <h2 className='mb-[80px] w-fit border-t-2 border-black pt-2 font-rg text-[30px] leading-tight tracking-tight text-[#18181B] lg:mb-[200px]'>
-              Harness the power of Aaru to generate thousands of people at once.
-              Interact with them to gain insights.
+            {/* Status badge */}
+            <div className='mb-8 inline-flex items-center rounded-full border border-white/10 bg-white/5 px-4 py-2 backdrop-blur-sm'>
+              <div className='mr-2 h-2 w-2 animate-pulse rounded-full bg-white'></div>
+              <span className='text-sm font-medium text-white'>
+                Virtual Cell Model
+              </span>
+            </div>
+
+            {/* Heading */}
+            <h2 className='mb-6 font-rg text-[2.75rem] leading-tight tracking-tight text-white'>
+              Predict cellular behavior with unprecedented accuracy
             </h2>
-            <p className='mb-6 font-book text-[13px] tracking-tight text-[#18181B]'>
-              Use Aaru to transform your operations.
+
+            {/* Description */}
+            <p className='mb-8 text-lg leading-relaxed text-neutral-300'>
+              Our virtual cell models leverage genomic sequences and comparative
+              genomics to predict gene expression patterns and cellular
+              responses, enabling rapid in silico experimentation.
             </p>
+
+            {/* Metrics */}
+            <div className='mb-12 grid grid-cols-2 gap-6'>
+              <div className='group rounded-xl border border-white/10 bg-white/5 p-4 transition-all hover:bg-white/10'>
+                <div className='flex items-baseline gap-1'>
+                  <div className='text-3xl font-semibold text-white'>92</div>
+                  <div className='text-lg text-white/80'>%</div>
+                </div>
+                <div className='mt-1 text-sm text-neutral-400 group-hover:text-neutral-300'>
+                  Prediction Accuracy
+                </div>
+              </div>
+              <div className='group rounded-xl border border-white/10 bg-white/5 p-4 transition-all hover:bg-white/10'>
+                <div className='flex items-baseline gap-1'>
+                  <div className='text-3xl font-semibold text-white'>1000</div>
+                  <div className='text-lg text-white/80'>x</div>
+                </div>
+                <div className='mt-1 text-sm text-neutral-400 group-hover:text-neutral-300'>
+                  Faster Analysis
+                </div>
+              </div>
+            </div>
+
+            {/* CTA */}
             <motion.div variants={itemVariants}>
               <Link
-                className='flex w-fit items-center gap-x-2 pb-1 transition-all hover:border-transparent hover:text-[#18181B]'
+                className='group inline-flex items-center gap-x-3 rounded-lg border border-white/20 bg-white/5 px-6 py-3 text-sm font-medium text-white transition-all hover:bg-white/10'
                 href='/contact'
               >
+                <span>Explore Virtual Cell Models</span>
                 <ArrowIcon
-                  className='rotate-[-90deg] text-black'
-                  color='#000000'
+                  className='rotate-[-90deg] transition-transform group-hover:translate-x-1'
+                  color='#FFFFFF'
                 />
-                <motion.span
-                  className='font-book text-xs uppercase tracking-wide'
-                  whileHover={{ x: 8 }}
-                  transition={{ duration: 0.2 }}
-                >
-                  Contact Us
-                </motion.span>
               </Link>
             </motion.div>
           </motion.div>

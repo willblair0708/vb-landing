@@ -90,7 +90,7 @@ export default function Home() {
                   viewport={{ once: true, amount: isMobile ? 0.1 : 0.3 }}
                   className='w-full'
                 >
-                  <FutureSection id='section-5' bgColor='#18181B' />
+                  {/* <FutureSection id='section-5' bgColor='#18181B' /> */}
                 </motion.div>
               </motion.main>
             </motion.div>
